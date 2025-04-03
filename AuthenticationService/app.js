@@ -10,7 +10,7 @@ import 'dotenv/config'
 
 // Data Access Layer
 import mongoose from 'mongoose';
-mongoose.connect('mongodb://localhost:27017/authentication');
+mongoose.connect(`${process.env.MONGO_URL}/authentication`);
 
 // Routes
 import indexRouter from './routes/index.js';
@@ -34,7 +34,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routes
 app.use('/', indexRouter);
 app.use('/users', userRouter);
-
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {
