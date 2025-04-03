@@ -4,7 +4,17 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import { fileURLToPath } from 'url';
+
+// DotEnv
+import 'dotenv/config'
+
+// Data Access Layer
+import mongoose from 'mongoose';
+mongoose.connect(path.join(process.env.MONGO_URL, '/authentication'));
+
+// Routes
 import indexRouter from './routes/index.js';
+import userRouter from './routes/users.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,7 +31,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Routes
 app.use('/', indexRouter);
+app.use('/users', userRouter);
+
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {
