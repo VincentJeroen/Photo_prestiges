@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 import User from '../models/user.js';
 
-var router = Router();
+var userRouter = Router();
 
 async function get(req, res) {
    try {
@@ -68,13 +68,13 @@ async function remove(req, res) {
    }
 }
 
-router.route('/')
+userRouter.route('/')
    .get(getAll)
    .post(create);
 
-router.route('/:id')
+userRouter.route('/:id')
    .get(get)
    .put(update)
    .delete(remove);
 
-export default router;
+export default userRouter;

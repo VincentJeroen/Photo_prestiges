@@ -10,7 +10,7 @@ import 'dotenv/config'
 
 // Data Access Layer
 import mongoose from 'mongoose';
-mongoose.connect(path.join(process.env.MONGO_URL, '/authentication'));
+mongoose.connect('mongodb://localhost:27017/authentication');
 
 // Routes
 import indexRouter from './routes/index.js';
