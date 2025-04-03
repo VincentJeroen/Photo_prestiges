@@ -3,6 +3,11 @@ import crypto from 'crypto';
 import User from './models/user.js';
 import {generateToken} from './utils/jwt.js';
 
+import 'dotenv/config';
+
+import mongoose from 'mongoose';
+mongoose.connect(`${process.env.MONGO_URL}/${process.env.DB_NAME}`);
+
 const app = express();
 app.use(express.json());
 
@@ -25,7 +30,8 @@ app.post('/register', async (req, res) => {
 
         res.status(201).json({token});
     } catch (error) {
-        res.status(500).json({message: 'Server error'});
+      console.log(error);
+      res.status(500).json({message: 'Server error:' + error.message});
     }
 });
 
