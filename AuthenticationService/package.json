@@ -7,15 +7,22 @@
     "start": "node bin/www"
   },
   "dependencies": {
+    "connect-roles": "^3.1.2",
     "cookie-parser": "~1.4.4",
+    "crypto": "^1.0.1",
     "debug": "~2.6.9",
     "dotenv": "^16.4.7",
     "express": "5.0.0",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.1",
     "morgan": "~1.9.1",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "mongodb": "^6.15.0"
