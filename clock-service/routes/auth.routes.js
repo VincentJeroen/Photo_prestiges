@@ -3,7 +3,7 @@ import { registerUser, loginUser } from '../service/service.js';
 
 const router = express.Router();
 
-router.post('/register', async (req, res) => {
+router.post('/registerr', async (req, res) => {
     try {
         const { token } = await registerUser(req.body);
         res.status(201).json({ token });
@@ -12,7 +12,7 @@ router.post('/register', async (req, res) => {
     }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/loginn', async (req, res) => {
     try {
         const { token } = await loginUser(req.body);
         res.status(200).json({ token });
