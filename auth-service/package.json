@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node bin/www"
+    "start": "nodemon --legacy-watch bin/www"
   },
   "dependencies": {
     "amqplib": "^0.10.7",
