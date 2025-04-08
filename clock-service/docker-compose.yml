@@ -1,0 +1,36 @@
+services:
+  clock-service:
+    build: .
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+      - rabbitmq
+    networks:
+      - app-network
+
+  mongodb:
+    image: mongo:8.0
+    ports:
+      - "27018:27018"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

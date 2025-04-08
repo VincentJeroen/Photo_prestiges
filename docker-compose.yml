@@ -1,36 +1,18 @@
 services:
   auth-service:
-    build: ./auth-service
-    ports:
-      - "3000:3000"
-    env_file:
-      - ./auth-service/.env
-    depends_on:
-      - mongodb
-      - rabbitmq
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
     networks:
-      - app-network
+      - backend
 
-  mongodb:
-    image: mongo:8.0
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
+  clock-service:
+    build:
+      context: ./clock-service
+      dockerfile: Dockerfile
     networks:
-      - app-network
-
-  rabbitmq:
-    image: rabbitmq:management
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-    networks:
-      - app-network
+      - backend
 
 networks:
-  app-network:
+  backend:
     driver: bridge
-
-volumes:
-  mongo-data:
