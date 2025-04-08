@@ -1,0 +1,10 @@
+services:
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./auth-service/.env
+    depends_on:
+      - mongodb
+      - rabbitmq
