@@ -2,6 +2,7 @@
   "name": "clock-service",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "start": "nodemon --legacy-watch bin/www"
   },
