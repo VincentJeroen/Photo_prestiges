@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser } from '../services/auth_service.js';
+import { registerUser, loginUser } from '../service/service.js';
 
 const router = express.Router();
 
