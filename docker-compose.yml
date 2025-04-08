@@ -1,0 +1,63 @@
+services:
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    env_file:
+      - ./auth-service/.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo-auth
+      - rabbitmq
+    networks:
+      - app-network
+
+  clock-service:
+    build: ./clock-service
+    container_name: clock-service
+    env_file:
+      - ./clock-service/.env
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongo-clock
+      - rabbitmq
+    networks:
+      - app-network
+
+  mongo-auth:
+    image: mongo:8.0
+    container_name: mongo-auth
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-auth-data:/data/db
+    networks:
+      - app-network
+
+  mongo-clock:
+    image: mongo:8.0
+    ports:
+      - "27018:27017"
+    container_name: mongo-clock
+    volumes:
+      - mongo-clock-data:/data/db
+    networks:
+      - app-network
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-auth-data:
+  mongo-clock-data:

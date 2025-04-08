@@ -8,7 +8,6 @@ import 'dotenv/config';
 import authRoutes from './routes/auth.routes.js';
 
 // Database
-console.log(`${process.env.MONGO_URL}/${process.env.DB_NAME}`);
 mongoose.connect(`${process.env.MONGO_URL}/${process.env.DB_NAME}`);
 
 const app = express();
