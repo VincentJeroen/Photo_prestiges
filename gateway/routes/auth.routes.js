@@ -7,8 +7,8 @@ router.post('/create-account', async (req, res) => {
     try {
         const response = await axios.post(`${process.env.AUTH_SERVICE_URL}/create-account`, req.body);
         res.status(response.status).send(response.data);
-    } catch (error) {
-        res.status(err.response?.status || 500).send(err.response?.data || { message: 'Internal error' });
+    } catch (err) {
+        res.status(err.response?.status || 500).send(err.response?.data || { message: `Internal error: ${err}` });
     }
 });
 
@@ -16,8 +16,8 @@ router.post('/login', async (req, res) => {
     try {
         const response = await axios.post(`${process.env.AUTH_SERVICE_URL}/login`, req.body);
         res.status(response.status).send(response.data);
-    } catch (error) {
-        res.status(err.response?.status || 500).send(err.response?.data || { message: 'Internal error' });
+    } catch (err) {
+        res.status(err.response?.status || 500).send(err.response?.data || { message: `Internal error: ${err}` });
     }
 });
 
