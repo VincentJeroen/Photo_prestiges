@@ -52,7 +52,7 @@ export async function setTargetEnd({targetId, end}) {
     }
 }
 
-export async function startTarget({ targetId }) {
+export async function startTarget({targetId}) {
     // const existingTarget = await Target.findById(targetId);
     //
     // if (!existingTarget) {
@@ -61,13 +61,10 @@ export async function startTarget({ targetId }) {
     // else {
     // TODO: start clock service
 
-    // Debug logging voor het publiceren van het bericht
-    console.log(`📤 Publishing message to exchange "targetExchange" with routing key "target.start"`);
-    await publishToExchange('targetExchange', JSON.stringify({ targetId, action: 'Hallo' }), 'target.start', 'topic');
-    console.log('✅ Message published to exchange.');
+    await publishToExchange('targetExchange', JSON.stringify({targetId, action: 'Hallo'}), 'target.start', 'topic');
 
-    const response = await axios.get('http://clock-service:3001/auth/ditiseentest');
-    console.log('Axios aangeroepen');
+    /* Direct communication between services, this is wrong - Vincent */
+    const response = await axios.get('http://clock-service:3001/startTimer');
 
     return 200;
     // }

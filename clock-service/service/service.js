@@ -1,19 +1,13 @@
-import { getChannel } from '../utils/rabbitmq.js'; // Zorg ervoor dat dit goed geïmporteerd is
+import { getChannel } from '../utils/rabbitmq.js';
 
-export const startConsumer = async () => {
+export const startTimer = async () => {
     const exchangeName = 'targetExchange';
     const routingKey = 'target.start';
-    const queueName = 'clockQueue'; // 👈 vaste queue naam
+    const queueName = 'clockQueue';
 
     const channel = await getChannel();
-
-    // 👇 vaste, durable queue gebruiken
     await channel.assertQueue(queueName, { durable: true });
-
-    // 👇 bind aan exchange met juiste routing key
     await channel.bindQueue(queueName, exchangeName, routingKey);
-
-    console.log(`👂 Waiting for messages on "${routingKey}" in queue "${queueName}"`);
 
     channel.consume(queueName, (msg) => {
         if (msg?.content) {

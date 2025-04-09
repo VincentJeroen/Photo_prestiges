@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import 'dotenv/config';
 
 // Routes
-import registerRoutes from './routes/register.routes.js';
+import registerRoutes from './routes/register.js';
 
 // Database
 mongoose.connect(`${process.env.MONGO_URL}/${process.env.DB_NAME}`);

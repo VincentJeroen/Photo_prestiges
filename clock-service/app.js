@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import 'dotenv/config';
 
 // Routes
-import authRoutes from './routes/auth.routes.js';
+import authRoutes from './routes/auth.js';
 
 // Database
 console.log(`${process.env.MONGO_URL}/${process.env.DB_NAME}`);
@@ -15,6 +15,6 @@ const app = express();
 app.use(express.json());
 
 // Routes
-app.use('/auth', authRoutes);
+app.use('/', authRoutes);
 
 export default app;

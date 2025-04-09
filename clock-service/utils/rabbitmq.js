@@ -17,7 +17,7 @@ const getChannel = async () => {
 
         return channel;
     } catch (error) {
-        console.error('❌ Fout bij verbinden met RabbitMQ:', error);
+        console.error('(PP) Failed to establish connection with RabbitMQ: ', error);
         throw error;
     }
 };
