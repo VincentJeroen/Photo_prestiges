@@ -39,10 +39,12 @@ router.post('/setTargetEnd', async (req, res) => {
 
 router.post('/startTarget', async (req, res) => {
     try {
-        res.status(await startTarget(req.body));
+        const status = await startTarget(req.body);
+        res.status(status).send(); // 👈 belangrijk: verzendt de response!
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 });
+
 
 export default router;

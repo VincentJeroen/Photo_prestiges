@@ -1,31 +1,29 @@
-import crypto from 'crypto';
-import User from '../models/user.js';
-import { generateToken } from '../utils/jwt.js';
+import { getChannel } from '../utils/rabbitmq.js'; // Zorg ervoor dat dit goed geïmporteerd is
 
-export async function registerUser({ email, password, role = 'user' }) {
-    const existingUser = await User.findOne({ email }, 'email');
-    if (existingUser) {
-        throw new Error('User already exists');
-    }
+export const startConsumer = async () => {
+    const exchangeName = 'targetExchange';
+    const routingKey = 'target.start';
+    const queueName = 'clockQueue'; // 👈 vaste queue naam
 
-    const user = new User({ email, password, role });
-    await user.save();
+    const channel = await getChannel();
 
-    const token = generateToken(user);
-    return { token };
-}
+    // 👇 vaste, durable queue gebruiken
+    await channel.assertQueue(queueName, { durable: true });
 
-export async function loginUser({ email, password }) {
-    const user = await User.findOne({ email });
-    if (!user) {
-        throw new Error('User not found');
-    }
+    // 👇 bind aan exchange met juiste routing key
+    await channel.bindQueue(queueName, exchangeName, routingKey);
 
-    const isValid = user.hash === crypto.pbkdf2Sync(password, user.salt, 1000, 64, 'sha512').toString('hex');
-    if (!isValid) {
-        throw new Error('Invalid password');
-    }
+    console.log(`👂 Waiting for messages on "${routingKey}" in queue "${queueName}"`);
 
-    const token = generateToken(user);
-    return { token };
-}
+    channel.consume(queueName, (msg) => {
+        if (msg?.content) {
+            const payload = JSON.parse(msg.content.toString());
+            console.log('📥 Message received:', payload);
+        } else {
+            console.log('❌ Empty message received');
+        }
+    }, { noAck: true });
+
+    return 200;
+};
+
