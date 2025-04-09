@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import crypto from 'crypto';
 
 const userSchema = new mongoose.Schema({
-    isOwner: { type: Boolean},
     uid: { type: String},
     email: { type: String, unique: true, required: true },
     hash: { type: String, required: true },

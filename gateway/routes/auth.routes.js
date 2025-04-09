@@ -12,7 +12,7 @@ router.post('/create-account', async (req, res) => {
     }
 });
 
-router.post('/loginn', async (req, res) => {
+router.post('/login', async (req, res) => {
     try {
         const response = await axios.post(`${process.env.AUTH_SERVICE_URL}/login`, req.body);
         res.status(response.status).send(response.data);

@@ -2,13 +2,13 @@ import crypto from 'crypto';
 import User from '../models/user.js';
 import { generateToken } from '../utils/jwt.js';
 
-export async function registerUser({ email, password, role = 'user' }) {
+export async function registerUser({ email, password }) {
     const existingUser = await User.findOne({ email }, 'email');
     if (existingUser) {
         throw new Error('User already exists');
     }
 
-    const user = new User({ email, password, role });
+    const user = new User({ email, password });
     await user.save();
 
     const token = generateToken(user);
