@@ -14,6 +14,6 @@ const app = express();
 app.use(express.json());
 
 // Routes
-app.use('/target', targetRoutes);
+app.use('/', targetRoutes);
 
 export default app;
