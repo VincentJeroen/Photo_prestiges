@@ -92,6 +92,21 @@ services:
     networks:
       - app-network
 
+  image-server:
+    build: ./image-server
+    container_name: image-server
+    env_file:
+      - ./image-server/.env
+    ports:
+      - "3011:3011"
+    volumes:
+      - ./image-server:/app
+      - /app/node_module
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-network
+
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq
