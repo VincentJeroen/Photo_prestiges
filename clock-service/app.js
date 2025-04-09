@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import 'dotenv/config';
 
 // Routes
-import authRoutes from './routes/auth.js';
+import authRoutes from './routes/clock.js';
 import {handleMessages} from "./service/consumer.js";
 
 // Database

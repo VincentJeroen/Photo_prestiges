@@ -22,15 +22,6 @@ export const handleMessages = async () => {
                     case 'target.start':
                         await startTimer(payload);
                         break;
-                    case 'target.create':
-                        // await createTarget(payload);
-                        break;
-                    case 'target.update':
-                        // await updateTarget(payload);
-                        break;
-                    case 'target.delete':
-                        // await deleteTarget(payload);
-                        break;
                     default:
                         console.warn(`Unknown routing key: ${msg.fields.routingKey}`);
                 }
