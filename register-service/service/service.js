@@ -1,7 +1,6 @@
 import Target from '../models/target.js';
 import TargetEntry from '../models/target-entry.js';
 import {publishToExchange} from '../utils/rabbitmq.js';
-import axios from "axios";
 
 // As User
 export async function joinTarget({targetId, email}) {
@@ -61,10 +60,12 @@ export async function startTarget({targetId}) {
     // else {
     // TODO: start clock service
 
-    await publishToExchange('targetExchange', JSON.stringify({targetId, action: 'Hallo'}), 'target.start', 'topic');
-
-    /* Direct communication between services, this is wrong - Vincent */
-    const response = await axios.get('http://clock-service:3001/startTimer');
+    await publishToExchange(
+        'targetExchange',
+        JSON.stringify({targetId}),
+        'target.start',
+        'topic'
+    );
 
     return 200;
     // }

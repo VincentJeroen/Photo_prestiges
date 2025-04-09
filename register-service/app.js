@@ -6,6 +6,7 @@ import 'dotenv/config';
 
 // Routes
 import registerRoutes from './routes/register.js';
+import {getChannel} from "./utils/rabbitmq.js";
 
 // Database
 mongoose.connect(`${process.env.MONGO_URL}/${process.env.DB_NAME}`);
@@ -15,5 +16,9 @@ app.use(express.json());
 
 // Routes
 app.use('/', registerRoutes);
+
+// Channel
+getChannel();
+
 
 export default app;
