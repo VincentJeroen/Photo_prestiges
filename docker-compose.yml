@@ -92,6 +92,21 @@ services:
     networks:
       - app-network
 
+  mail-service:
+    build: ./mail-service
+    container_name: mail-service
+    env_file:
+      - ./mail-service/.env
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./mail-service:/app
+      - /app/node_module
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-network
+
   image-server:
     build: ./image-server
     container_name: image-server

@@ -1,14 +1,3 @@
-
-
-// // Routes
-// import imageRoutes from './routes/images.routes.js';
-
-// const app = express();
-// app.use(express.json());
-
-// // Routes
-// app.use('/', imageRoutes);
-
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
