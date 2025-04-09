@@ -1,19 +1,19 @@
 import express from 'express';
-import mongoose from 'mongoose';
 
 // DotEnv
 import 'dotenv/config';
 
 // Routes
+import authRoutes from './routes/auth.routes.js';
 import targetRoutes from './routes/target.routes.js';
-
-// Database
-mongoose.connect(`${process.env.MONGO_URL}/${process.env.DB_NAME}`);
+import registerRoutes from './routes/register.routes.js';
 
 const app = express();
 app.use(express.json());
 
 // Routes
-app.use('/target', targetRoutes);
+app.use('/', authRoutes);
+app.use('/', targetRoutes);
+app.use('/', registerRoutes);
 
 export default app;
