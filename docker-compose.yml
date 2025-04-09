@@ -25,18 +25,18 @@ services:
       - ./auth-service:/app
       - /app/node_module
     depends_on:
-      - auth-mongo
+      - auth-db
       - rabbitmq
     networks:
       - app-network
         
-  auth-mongo:
+  auth-db:
     image: mongo:8.0
-    container_name: auth-mongo
+    container_name: auth-db
     ports:
       - "27017:27017"
     volumes:
-      - auth-mongo-data:/data/db
+      - auth-db-data:/data/db
     networks:
       - app-network
 
@@ -51,18 +51,18 @@ services:
       - ./clock-service:/app
       - /app/node_module
     depends_on:
-      - clock-mongo
+      - clock-db
       - rabbitmq
     networks:
       - app-network
         
-  clock-mongo:
+  clock-db:
     image: mongo:8.0
     ports:
       - "27018:27017"
-    container_name: clock-mongo
+    container_name: clock-db
     volumes:
-      - clock-mongo-data:/data/db
+      - clock-db-data:/data/db
     networks:
       - app-network
 
@@ -77,18 +77,18 @@ services:
       - ./register-service:/app
       - /app/node_module
     depends_on:
-      - register-mongo
+      - register-db
       - rabbitmq
     networks:
       - app-network
 
-  register-mongo:
+  register-db:
     image: mongo:8.0
     ports:
       - "27021:27017"
-    container_name: register-mongo
+    container_name: register-db
     volumes:
-      - register-mongo-data:/data/db
+      - register-db-data:/data/db
     networks:
       - app-network
 
@@ -106,6 +106,6 @@ networks:
     driver: bridge
 
 volumes:
-  auth-mongo-data:
-  clock-mongo-data:
-  register-mongo-data:
+  auth-db-data:
+  clock-db-data:
+  register-db-data:
