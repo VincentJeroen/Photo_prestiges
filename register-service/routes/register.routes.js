@@ -1,21 +1,45 @@
 import express from 'express';
-import { startTarget, joinTarget } from '../service/service.js';
+import { createTarget, joinTarget, setTargetStart, setTargetEnd, startTarget } from '../service/service.js';
 
 const router = express.Router();
 
-router.post('/startTarget', async (req, res) => {
+// User
+router.post('/joinTarget', async (req, res) => {
     try {
-        const { result } = await startTarget(req.body);
-        res.status(201).json({ result });
+        res.status(await joinTarget(req.body));
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 });
 
-router.post('/joinTarget', async (req, res) => {
+// Owner
+router.post('/createTarget', async (req, res) => {
     try {
-        const { result } = await joinTarget(req.body);
-        res.status(201).json({ result });
+        res.status(await createTarget(req.body));
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+router.post('/setTargetStart', async (req, res) => {
+    try {
+        res.status(await setTargetStart(req.body));
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+router.post('/setTargetEnd', async (req, res) => {
+    try {
+        res.status(await setTargetEnd(req.body));
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+router.post('/startTarget', async (req, res) => {
+    try {
+        res.status(await startTarget(req.body));
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
