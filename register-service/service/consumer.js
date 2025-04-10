@@ -7,10 +7,20 @@ export const handleMessages = async () => {
 
         const queueName = 'registerQueue';
         const exchangeName = 'registerExchange';
+        const delayedExchangeName = 'registerDelayedExchange';
         const routingKey = 'register.target.finished';
+        const type = 'topic';
+
+        await channel.assertExchange(exchangeName, type, { durable: true });
+        await channel.assertExchange(delayedExchangeName, 'x-delayed-message', {
+            durable: true,
+            arguments: { 'x-delayed-type': type }
+        });
 
         await channel.assertQueue(queueName, {durable: true});
+
         await channel.bindQueue(queueName, exchangeName, routingKey);
+        await channel.bindQueue(queueName, delayedExchangeName, routingKey);
 
         console.log('Waiting for messages in queue');
         channel.consume(queueName, async (msg) => {

@@ -6,6 +6,9 @@ import 'dotenv/config';
 
 // Routes
 import authRoutes from './routes/clock.js';
+
+// RabbitMQ
+import {getChannel} from "./utils/rabbitmq.js";
 import {handleMessages} from "./service/consumer.js";
 
 // Database

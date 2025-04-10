@@ -4,20 +4,20 @@ export const startTimer = async (payload) => {
     const { targetId } = payload;
     console.log(`Bericht ontvangen van publisher met targetId: ${targetId}`);
 
+    // TODO, stuur in payload ook "start, end" mee en breken daarmee duration
     const duration = targetId * 1000;
 
-    setTimeout(async () => {
-        try {
-            await publishToExchange(
-                'registerExchange',
-                JSON.stringify({targetId}),
-                'register.target.finished',
-                'topic'
-            );
-        } catch (err) {
-            console.error('Error sending message to register-service:', err);
-        }
-    }, duration);
+    try {
+        await publishToExchange(
+            'registerDelayedExchange',
+            JSON.stringify({targetId}),
+            'register.target.finished',
+            'topic',
+            { headers: { 'x-delay': duration } }
+        );
+    } catch (err) {
+        console.error('Error sending message to register-service:', err);
+    }
 
     return 200;
 };

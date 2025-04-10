@@ -3,7 +3,7 @@ import amqplib from 'amqplib';
 let connection = null;
 let channel = null;
 
-const getChannel = async () => {
+export const getChannel = async () => {
     if (connection && channel) return channel;
 
     try {
@@ -22,20 +22,17 @@ const getChannel = async () => {
     }
 };
 
-const sendToQueue = async (queueName, message) => {
+export const publishToExchange = async (exchangeName, message, routingKey = '', type = 'fanout', options = {}) => {
     const ch = await getChannel();
-    await ch.assertQueue(queueName, { durable: true });
-    ch.sendToQueue(queueName, Buffer.from(message), { persistent: true });
-};
 
-const publishToExchange = async (exchangeName, message, routingKey = '', type = 'fanout') => {
-    const ch = await getChannel();
-    await ch.assertExchange(exchangeName, type, { durable: true });
-    ch.publish(exchangeName, routingKey, Buffer.from(message));
-};
+    if (options.headers && options.headers['x-delay']) {
+        await ch.assertExchange(exchangeName, 'x-delayed-message', {
+            durable: true,
+            arguments: { 'x-delayed-type': type }
+        });
+    } else {
+        await ch.assertExchange(exchangeName, type, { durable: true });
+    }
 
-export {
-    getChannel,
-    sendToQueue,
-    publishToExchange
+    ch.publish(exchangeName, routingKey, Buffer.from(message), options);
 };

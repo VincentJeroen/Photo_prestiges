@@ -8,7 +8,9 @@ export const handleMessages = async () => {
         const queueName = 'clockQueue';
         const exchangeName = 'targetExchange';
         const routingKey = 'target.start';
+        const type = 'topic';
 
+        await channel.assertExchange(exchangeName, type, { durable: true });
         await channel.assertQueue(queueName, {durable: true});
         await channel.bindQueue(queueName, exchangeName, routingKey);
 

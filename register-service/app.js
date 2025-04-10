@@ -21,7 +21,6 @@ app.use(express.json());
 app.use('/', registerRoutes);
 
 // Channel
-getChannel();
 handleMessages();
 
 

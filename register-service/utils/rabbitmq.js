@@ -3,7 +3,7 @@ import amqplib from 'amqplib';
 let connection = null;
 let channel = null;
 
-const getChannel = async () => {
+export const getChannel = async () => {
     if (connection && channel) return channel;
 
     try {
@@ -22,20 +22,8 @@ const getChannel = async () => {
     }
 };
 
-const sendToQueue = async (queueName, message) => {
-    const ch = await getChannel();
-    await ch.assertQueue(queueName, { durable: true });
-    ch.sendToQueue(queueName, Buffer.from(message), { persistent: true });
-};
-
-const publishToExchange = async (exchangeName, message, routingKey = '', type = 'fanout') => {
+export const publishToExchange = async (exchangeName, message, routingKey = '', type = 'fanout') => {
     const ch = await getChannel();
     await ch.assertExchange(exchangeName, type, { durable: true });
     ch.publish(exchangeName, routingKey, Buffer.from(message));
-};
-
-export {
-    getChannel,
-    sendToQueue,
-    publishToExchange
 };
