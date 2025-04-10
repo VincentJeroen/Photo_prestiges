@@ -10,6 +10,7 @@ const targetSchema = new mongoose.Schema({
     description: { type: String },
     upVotes: { type: Number, default: 0 },
     downVotes: { type: Number, default: 0 },
+    canRegister: { type: Boolean, default: false },
 });
 
 const Target = mongoose.model('Target', targetSchema);

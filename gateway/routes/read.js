@@ -3,32 +3,32 @@ import axios from 'axios';
 
 const router = express.Router();
 
-// TODO: remove this as uploadPhoto in target.js will do this
-router.post('/startTarget', async (req, res) => {
+router.post('/getOverview', async (req, res) => {
     try {
-        const response = await axios.post(`${process.env.REGISTER_SERVICE_URL}/startTarget`, req.body);
+        const response = await axios.get(`${process.env.READ_SERVICE_URL}/getOverview`, req.body);
         res.status(response.status).send(response.data);
     } catch (err) {
         res.status(err.response?.status || 500).send(err.response?.data || { message: `Internal error: ${err}` });
     }
 });
 
-router.post('/setStart', async (req, res) => {
+router.post('/getScore', async (req, res) => {
     try {
-        const response = await axios.post(`${process.env.REGISTER_SERVICE_URL}/setStart`, req.body);
+        const response = await axios.get(`${process.env.READ_SERVICE_URL}/getScore`, req.body);
         res.status(response.status).send(response.data);
     } catch (err) {
         res.status(err.response?.status || 500).send(err.response?.data || { message: `Internal error: ${err}` });
     }
 });
 
-router.post('/setEnd', async (req, res) => {
+router.post('/getScores', async (req, res) => {
     try {
-        const response = await axios.post(`${process.env.REGISTER_SERVICE_URL}/setEnd`, req.body);
+        const response = await axios.get(`${process.env.READ_SERVICE_URL}/getScores`, req.body);
         res.status(response.status).send(response.data);
     } catch (err) {
         res.status(err.response?.status || 500).send(err.response?.data || { message: `Internal error: ${err}` });
     }
 });
+
 
 export default router;
