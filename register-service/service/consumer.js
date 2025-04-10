@@ -1,13 +1,13 @@
 import {getChannel} from '../utils/rabbitmq.js';
-import {startTimer} from './service.js';
+import { finishTarget } from './service.js';
 
 export const handleMessages = async () => {
     try {
         const channel = await getChannel();
 
-        const queueName = 'clockQueue';
-        const exchangeName = 'targetExchange';
-        const routingKey = 'target.start';
+        const queueName = 'registerQueue';
+        const exchangeName = 'registerExchange';
+        const routingKey = 'register.target.finished';
 
         await channel.assertQueue(queueName, {durable: true});
         await channel.bindQueue(queueName, exchangeName, routingKey);
@@ -20,8 +20,8 @@ export const handleMessages = async () => {
                 const payload = JSON.parse(msg.content.toString());
 
                 switch (msg.fields.routingKey) {
-                    case 'target.start':
-                        await startTimer(payload);
+                    case 'register.target.finished':
+                        await finishTarget(payload);
                         break;
                     default:
                         console.warn(`Unknown routing key: ${msg.fields.routingKey}`);

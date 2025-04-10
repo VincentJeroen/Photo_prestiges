@@ -71,3 +71,13 @@ export async function startTarget({targetId}) {
     // }
 }
 
+//
+export async function finishTarget({targetId}) {
+    //const existingTarget = await Target.findById(targetId);
+
+    //if (existingTarget) {
+        console.log(`Target ${targetId} is finished, calculate the results!`);
+        //return 201;
+    //}
+}
+
