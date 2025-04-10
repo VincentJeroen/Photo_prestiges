@@ -3,7 +3,6 @@ import axios from 'axios';
 
 const router = express.Router();
 
-// TODO would be nice if these route names matched the service names. '/startTarget' mean a service has a function called startTarget
 // TODO: remove this as uploadPhoto in target.js will do this
 router.post('/startTarget', async (req, res) => {
     try {
