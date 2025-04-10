@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 
 // DotEnv
 import 'dotenv/config';
@@ -10,6 +11,10 @@ import registerRoutes from './routes/register.routes.js';
 import readRoutes from './routes/register.routes.js';
 
 const app = express();
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'OPTIONS'],
+}));
 app.use(express.json());
 
 // Routes
