@@ -3,6 +3,15 @@ import axios from 'axios';
 
 const router = express.Router();
 
+router.post('/joinTarget', async (req, res) => {
+    try {
+        const response = await axios.post(`${process.env.REGISTER_SERVICE_URL}/joinTarget`, req.body);
+        res.status(response.status).send(response.data);
+    } catch (err) {
+        res.status(err.response?.status || 500).send(err.response?.data || { message: `Internal error: ${err}` });
+    }
+});
+
 // TODO: remove this as uploadPhoto in target.js will do this
 router.post('/startTarget', async (req, res) => {
     try {
@@ -13,18 +22,18 @@ router.post('/startTarget', async (req, res) => {
     }
 });
 
-router.post('/setStart', async (req, res) => {
+router.post('/createTarget', async (req, res) => {
     try {
-        const response = await axios.post(`${process.env.REGISTER_SERVICE_URL}/setStart`, req.body);
+        const response = await axios.post(`${process.env.REGISTER_SERVICE_URL}/createTarget`, req.body);
         res.status(response.status).send(response.data);
     } catch (err) {
         res.status(err.response?.status || 500).send(err.response?.data || { message: `Internal error: ${err}` });
     }
 });
 
-router.post('/setEnd', async (req, res) => {
+router.post('/setTargetDuration', async (req, res) => {
     try {
-        const response = await axios.post(`${process.env.REGISTER_SERVICE_URL}/setEnd`, req.body);
+        const response = await axios.post(`${process.env.REGISTER_SERVICE_URL}/setTargetDuration`, req.body);
         res.status(response.status).send(response.data);
     } catch (err) {
         res.status(err.response?.status || 500).send(err.response?.data || { message: `Internal error: ${err}` });

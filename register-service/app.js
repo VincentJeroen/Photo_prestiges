@@ -26,6 +26,6 @@ app.use('/', registerRoutes);
 
 // Channel
 handleMessages();
-
+console.log('Service started');
 
 export default app;

@@ -20,56 +20,44 @@ export async function joinTarget({targetId, email}) {
 }
 
 // As Owner
-export async function createTarget({email, imageUrl}) {
-    const target = new Target({owner: email, imageUrl: imageUrl});
+export async function createTarget({email}) {
+    const target = new Target({owner: email});
     target.save();
 
     return target.id;
 }
 
-export async function setTargetStart({targetId, start}) {
+export async function setTargetDuration({targetId, duration}) {
     const existingTarget = await Target.findById(targetId);
 
     if (!existingTarget) {
         return 400;
     } else {
-        existingTarget.start = start;
+        existingTarget.duration = duration;
         await existingTarget.save();
-        return 201;
-    }
-}
-
-export async function setTargetEnd({targetId, end}) {
-    const existingTarget = await Target.findById(targetId);
-
-    if (!existingTarget) {
-        return 400;
-    } else {
-        existingTarget.end = end;
-        await existingTarget.save();
-        return 201;
+        return 200;
     }
 }
 
 export async function startTarget({targetId}) {
-    // const existingTarget = await Target.findById(targetId);
-    //
-    // if (!existingTarget) {
-    //     return 400;
-    // }
-    // else {
-    // TODO: start clock service
-    // existingTarget.canRegister = true;
-    // existingTarget.save();
-    await publishToExchange(
-        'targetExchange',
-        JSON.stringify({targetId}),
-        'register.startTimer',
-        'topic'
-    );
+    const existingTarget = await Target.findById(targetId);
+    
+    if (!existingTarget) {
+        return 400;
+    }
+    else {
+        existingTarget.canRegister = true;
+        existingTarget.save();
 
-    return 200;
-    // }
+        await publishToExchange(
+            'targetExchange',
+            JSON.stringify({ targetId: targetId, duration: existingTarget.duration }),
+            'register.startTimer',
+            'topic'
+        );
+
+        return 200;
+    }
 }
 
 //
