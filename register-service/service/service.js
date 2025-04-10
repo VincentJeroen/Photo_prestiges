@@ -59,7 +59,8 @@ export async function startTarget({targetId}) {
     // }
     // else {
     // TODO: start clock service
-
+    // existingTarget.canRegister = true;
+    // existingTarget.save();
     await publishToExchange(
         'targetExchange',
         JSON.stringify({targetId}),
