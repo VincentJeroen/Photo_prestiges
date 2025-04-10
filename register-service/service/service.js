@@ -63,7 +63,7 @@ export async function startTarget({targetId}) {
     await publishToExchange(
         'targetExchange',
         JSON.stringify({targetId}),
-        'target.start',
+        'register.startTimer',
         'topic'
     );
 

@@ -11,7 +11,7 @@ export const startTimer = async (payload) => {
         await publishToExchange(
             'registerDelayedExchange',
             JSON.stringify({targetId}),
-            'register.target.finished',
+            'clock.finishTarget',
             'topic',
             { headers: { 'x-delay': duration } }
         );

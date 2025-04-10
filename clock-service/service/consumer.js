@@ -7,10 +7,13 @@ export const handleMessages = async () => {
 
         const queueName = 'clockQueue';
         const exchangeName = 'targetExchange';
-        const routingKey = 'target.start';
+        const routingKey = '*.startTimer';
         const type = 'topic';
 
+        // Exchanges
         await channel.assertExchange(exchangeName, type, { durable: true });
+
+        // Queues
         await channel.assertQueue(queueName, {durable: true});
         await channel.bindQueue(queueName, exchangeName, routingKey);
 
@@ -22,7 +25,7 @@ export const handleMessages = async () => {
                 const payload = JSON.parse(msg.content.toString());
 
                 switch (msg.fields.routingKey) {
-                    case 'target.start':
+                    case 'register.startTimer':
                         await startTimer(payload);
                         break;
                     default:
