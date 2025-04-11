@@ -15,5 +15,6 @@ app.use(express.json());
 
 // Routes
 app.use('/', targetRoutes);
+console.log('Target service is running');
 
 export default app;

@@ -66,6 +66,21 @@ services:
     networks:
       - app-network
 
+  mail-service:
+    build: ./mail-service
+    container_name: mail-service
+    env_file:
+      - ./mail-service/.env
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./mail-service:/app
+      - /app/node_module
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-network
+
   register-service:
     build: ./register-service
     container_name: register-service
@@ -92,18 +107,54 @@ services:
     networks:
       - app-network
 
-  mail-service:
-    build: ./mail-service
-    container_name: mail-service
+  score-service:
+    build: ./score-service
+    container_name: score-service
     env_file:
-      - ./mail-service/.env
+      - ./score-service/.env
     ports:
-      - "3002:3002"
+      - "3005:3005"
     volumes:
-      - ./mail-service:/app
+      - ./score-service:/app
       - /app/node_module
     depends_on:
       - rabbitmq
+    networks:
+      - app-network
+
+  score-db:
+    image: mongo:8.0
+    ports:
+      - "27022:27017"
+    container_name: score-db
+    volumes:
+      - score-db-data:/data/db
+    networks:
+      - app-network
+
+  target-service:
+    build: ./target-service
+    container_name: target-service
+    env_file:
+      - ./target-service/.env
+    ports:
+      - "3006:3006"
+    volumes:
+      - ./target-service:/app
+      - /app/node_module
+    depends_on:
+      - target-db
+      - rabbitmq
+    networks:
+      - app-network
+
+  target-db:
+    image: mongo:8.0
+    ports:
+      - "27023:27017"
+    container_name: target-db
+    volumes:
+      - target-db-data:/data/db
     networks:
       - app-network
 
@@ -139,3 +190,5 @@ volumes:
   auth-db-data:
   clock-db-data:
   register-db-data:
+  score-db-data:
+  target-db-data:

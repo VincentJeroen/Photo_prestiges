@@ -22,5 +22,6 @@ app.use('/', authRoutes);
 app.use('/', targetRoutes);
 app.use('/', registerRoutes);
 app.use('/', readRoutes);
+console.log('Gateway is running');
 
 export default app;

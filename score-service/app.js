@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import 'dotenv/config';
 
 // Routes
-import scoreRoutes from './routes/score.routes.js';
+import scoreRoutes from './routes/score.js';
 
 // Database
 mongoose.connect(`${process.env.MONGO_URL}/${process.env.DB_NAME}`);
@@ -15,5 +15,6 @@ app.use(express.json());
 
 // Routes
 app.use('/', scoreRoutes);
+console.log('Score service is running');
 
 export default app;
