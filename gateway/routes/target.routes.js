@@ -42,7 +42,7 @@ router.post('/uploadPhoto', upload.single('image'), async (req, res) => {
         // Clean up temp file
         fs.unlinkSync(req.file.path);
 
-        if (targetServiceResponse.status === 200) {
+        if (targetServiceResponse.status !== 200) {
             return res.status(targetServiceResponse.status).json({ message: targetServiceResponse.data });
         }
         
