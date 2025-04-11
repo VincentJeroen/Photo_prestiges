@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.routes.js';
 import targetRoutes from './routes/target.routes.js';
 import registerRoutes from './routes/register.routes.js';
 import readRoutes from './routes/read.routes.js';
+import axios from "axios";
 
 const app = express();
 app.use(express.json());

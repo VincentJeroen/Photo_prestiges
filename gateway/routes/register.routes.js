@@ -1,5 +1,18 @@
 import express from 'express';
 import axios from 'axios';
+import CircuitBreaker from 'opossum';
+
+// Circuit Breakers
+const callService = async (url, method = 'get', data = null) => {
+    return axios({ method, url, data });
+};
+const breakerOptions = {
+    timeout: 5000,
+    errorThresholdPercentage: 50,
+    resetTimeout: 10000,
+};
+
+const registerBreaker = new CircuitBreaker(callService, breakerOptions);
 
 const router = express.Router();
 
@@ -22,10 +35,10 @@ router.post('/joinTarget', async (req, res) => {
 // TODO: remove this as uploadPhoto in target.js will do this
 router.post('/startTarget', async (req, res) => {
     try {
-        const response = await axios.post(`${process.env.REGISTER_SERVICE_URL}/startTarget`, req.body);
+        const response = await registerBreaker.fire(`${process.env.REGISTER_SERVICE_URL}/startTarget`, 'post', req.body);
         res.status(response.status).send(response.data);
     } catch (err) {
-        res.status(err.response?.status || 500).send(err.response?.data || { message: `Internal error: ${err}` });
+        res.status(err.response?.status || 500).send(err.response?.data || { message: 'Failed to start target' });
     }
 });
 
