@@ -13,8 +13,10 @@ mongoose.connect(`${process.env.MONGO_URL}/${process.env.DB_NAME}`);
 const app = express();
 app.use(express.json());
 
+
 // Routes
 app.use('/', scoreRoutes);
+
 console.log('Score service is running');
 
 export default app;

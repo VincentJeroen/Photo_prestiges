@@ -1,22 +1,33 @@
 import Target from '../models/target.js';
-import TargetEntry from '../models/target-entry.js';
 import {publishToExchange} from '../utils/rabbitmq.js';
 
 // As User
+export async function isTargetJoinable({targetId}) {
+    const existingTarget = await Target.findById(targetId);
+    if (existingTarget) {
+        if (existingTarget.canRegister) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 export async function joinTarget({targetId, email}) {
     const existingTarget = await Target.findById(targetId);
     if (existingTarget) {
         return 400;
     }
 
-    const existingTargetEntry = await TargetEntry.findOne({targetId: targetId, user: email});
-    if (existingTargetEntry) {
-        return 400;
-    } else {
-        const targetEntry = new TargetEntry({targetId: targetId, user: email});
-        await targetEntry.save();
-        return 201;
-    }
+    // const existingTargetEntry = await TargetEntry.findOne({targetId: targetId, user: email});
+    // if (existingTargetEntry) {
+    //     return 400;
+    // } else {
+    //     const targetEntry = new TargetEntry({targetId: targetId, user: email});
+    //     await targetEntry.save();
+    //     return 201;
+    // }
+    return 321;
 }
 
 // As Owner

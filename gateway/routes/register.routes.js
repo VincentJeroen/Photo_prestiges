@@ -5,8 +5,15 @@ const router = express.Router();
 
 router.post('/joinTarget', async (req, res) => {
     try {
-        const response = await axios.post(`${process.env.REGISTER_SERVICE_URL}/joinTarget`, req.body);
-        res.status(response.status).send(response.data);
+        {
+            const response = await axios.post(`${process.env.REGISTER_SERVICE_URL}/isTargetJoinable`, req.body);
+            if (response.status !== 200) {
+                return res.status(response.status).send({ message: 'Target is not joinable' });
+            }
+        }
+
+        const response = await axios.post(`${process.env.SCORE_SERVICE_URL}/joinTarget`, req.body);
+        return res.status(response.status).json(response);
     } catch (err) {
         res.status(err.response?.status || 500).send(err.response?.data || { message: `Internal error: ${err}` });
     }

@@ -1,11 +1,21 @@
 import express from 'express';
-import { createTarget, joinTarget, setTargetDuration, startTarget } from '../service/service.js';
+import { createTarget, isTargetJoinable, joinTarget, setTargetDuration, startTarget } from '../service/service.js';
 
 const router = express.Router();
 
 // User
+router.get('/isTargetJoinable', async (req, res) => {
+    if (await isTargetJoinable(req.body)) {
+        res.status(200).send();
+    } else {
+        res.status(400).send();
+    }
+});
+
 router.post('/joinTarget', async (req, res) => {
     try {
+        if (await isTargetJoinable(req.body)) {}
+
         res.status(await joinTarget(req.body)).json({ message: 'Target joined successfully' });
     } catch (error) {
         res.status(400).json({ message: error.message });
