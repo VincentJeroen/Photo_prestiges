@@ -51,7 +51,7 @@ export async function startTarget({targetId}) {
         existingTarget.save();
 
         await publishToExchange(
-            'targetExchange',
+            'registerExchange',
             JSON.stringify({ targetId: targetId, duration: existingTarget.duration }),
             'register.startTimer',
             'topic'

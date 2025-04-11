@@ -6,7 +6,7 @@ export const handleMessages = async () => {
         const channel = await getChannel();
 
         const queueName = 'clockQueue';
-        const exchangeName = 'targetExchange';
+        const exchangeName = 'registerExchange';
         const routingKey = '*.startTimer';
         const type = 'topic';
 
