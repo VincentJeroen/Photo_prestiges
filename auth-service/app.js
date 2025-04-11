@@ -1,10 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-
-// DotEnv
 import 'dotenv/config';
-
-// Routes
 import authRoutes from './routes/auth.routes.js';
 
 // Database

@@ -1,14 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
-
-// DotEnv
 import 'dotenv/config';
-
-// Routes
-import authRoutes from './routes/clock.js';
-
-// RabbitMQ
-import {getChannel} from "./utils/rabbitmq.js";
+import authRoutes from './routes/clock.routes.js';
 import {handleMessages} from "./service/consumer.js";
 
 // Database

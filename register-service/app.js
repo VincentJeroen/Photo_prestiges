@@ -1,13 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
-
-// DotEnv
 import 'dotenv/config';
-
-// Routes
-import registerRoutes from './routes/register.js';
-
-// RabbitMQ
+import registerRoutes from './routes/register.routes.js';
 import {handleMessages} from "./service/consumer.js";
 
 // Database

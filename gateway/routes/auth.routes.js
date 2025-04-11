@@ -6,6 +6,7 @@ import CircuitBreaker from 'opossum';
 const callService = async (url, method = 'get', data = null) => {
     return axios({method, url, data});
 };
+
 const breakerOptions = {
     timeout: 5000,
     errorThresholdPercentage: 50,
@@ -16,6 +17,31 @@ const authBreaker = new CircuitBreaker(callService, breakerOptions);
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /create-account:
+ *   post:
+ *     summary: Maak een nieuwe gebruiker aan
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Gebruiker succesvol aangemaakt
+ *       400:
+ *         description: Fout bij het aanmaken van de gebruiker
+ *       500:
+ *         description: Interne serverfout
+ */
 router.post('/create-account', async (req, res) => {
     try {
         const response = await authBreaker.fire(`${process.env.AUTH_SERVICE_URL}/create-account`, 'post', req.body);
@@ -25,6 +51,31 @@ router.post('/create-account', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: Log in met bestaande gebruiker
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Succesvolle login
+ *       401:
+ *         description: Ongeldige inloggegevens
+ *       500:
+ *         description: Interne serverfout
+ */
 router.post('/login', async (req, res) => {
     try {
         const response = await authBreaker.fire(`${process.env.AUTH_SERVICE_URL}/login`, 'post', req.body);
