@@ -15,10 +15,10 @@ import {handleMessages} from "./service/consumer.js";
 mongoose.connect(`${process.env.MONGO_URL}/${process.env.DB_NAME}`);
 
 const app = express();
-// app.use(cors({
-//     origin: process.env.GATEWAY_URL,
-//     methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'OPTIONS'],
-// }));
+app.use(cors({
+    origin: process.env.GATEWAY_URL,
+    methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'OPTIONS'],
+}));
 app.use(express.json());
 
 // Routes
