@@ -43,6 +43,7 @@ export async function startTarget({targetId}) {
     const existingTarget = await Target.findById(targetId);
     
     if (!existingTarget) {
+        console.log('aaa');
         return 400;
     }
     else {

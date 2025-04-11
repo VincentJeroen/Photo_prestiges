@@ -35,9 +35,6 @@ router.post('/uploadPhoto', upload.single('image'), async (req, res) => {
         const form = new FormData();
         form.append('image', fs.createReadStream(req.file.path), req.file.originalname);
 
-        form.append('targetId', req.body.targetId);
-        form.append('email', req.body.email);
-
         const targetServiceResponse = await axios.post(`${process.env.TARGET_SERVICE_URL}/uploadPhoto`, form, {
             headers: form.getHeaders(),
         });
@@ -46,23 +43,21 @@ router.post('/uploadPhoto', upload.single('image'), async (req, res) => {
         fs.unlinkSync(req.file.path);
 
         if (targetServiceResponse.status === 200) {
-            res.status(200).json(targetServiceResponse.data);
-
-            // Call score service
-            const body = {
-                targetId: req.body.targetId,
-                email: req.body.email,
-                photoUrl: targetServiceResponse.data.photoUrl,
-            }
-            const scoreServiceResponse = await axios.post(`${process.env.SCORE_SERVICE_URL}/score`, body);
-            if (scoreServiceResponse.status === 200) {
-                return res.status(200).json(scoreServiceResponse.data);
-            } else {
-                return res.status(scoreServiceResponse.status).json({ message: scoreServiceResponse.data });
-            }
-        } else {
             return res.status(targetServiceResponse.status).json({ message: targetServiceResponse.data });
         }
+        
+        // Call score service
+        const body = {
+            targetId: req.body.targetId,
+            email: req.body.email,
+            photoUrl: targetServiceResponse.data.photoUrl,
+        }
+        const scoreServiceResponse = await axios.post(`${process.env.SCORE_SERVICE_URL}/generate-score`, body);
+        if (scoreServiceResponse.status === 200) {
+            return res.status(scoreServiceResponse.status).json(scoreServiceResponse.data);
+        } 
+
+        return res.status(200).json(scoreServiceResponse.data);
     } catch (error) {
         console.error('Error uploading file:', error.message);
         res.status(500).send('Failed to upload file');

@@ -23,6 +23,7 @@ export const handleMessages = async () => {
 
             try {
                 const payload = JSON.parse(msg.content.toString());
+                console.log(payload);
 
                 switch (msg.fields.routingKey) {
                     case 'register.startTimer':

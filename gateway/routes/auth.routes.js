@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.post('/create-account', async (req, res) => {
     try {
+        console.log('meow!');
         const response = await axios.post(`${process.env.AUTH_SERVICE_URL}/create-account`, req.body);
         res.status(response.status).send(response.data);
     } catch (err) {
