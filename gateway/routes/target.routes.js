@@ -141,7 +141,9 @@ router.post('/uploadPhoto', upload.single('image'), async (req, res) => {
             email: req.body.email,
             photoUrl: targetServiceResponse.data.photoUrl,
         };
+        console.log('dit print die wel');
         const scoreServiceResponse = await targetBreaker.fire(`${process.env.SCORE_SERVICE_URL}/generate-score`, 'post', body);
+        console.log('dit print die niet');
         if (scoreServiceResponse.status === 200) {
             return res.status(scoreServiceResponse.status).json(scoreServiceResponse.data);
         }

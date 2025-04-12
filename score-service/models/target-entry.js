@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const targetEntrySchema = new mongoose.Schema({
-    targetId: { type: mongoose.Schema.Types.ObjectId, ref: 'Target', required: true },
+    targetId: { type: String, required: true },
     user: { type: String, required: true }, // EMAIL OF USER
     imageUrl: { type: String }, // Uploaded ImageURL
     score: { type: Number }, // Score of uploaded ImageURL

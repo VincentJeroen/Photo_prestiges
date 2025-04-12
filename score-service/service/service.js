@@ -1,8 +1,8 @@
 import TargetEntry from '../models/target-entry.js';
 
 export async function generateScore({ targetId, email, photoUrl }) {
-    const existingEntry = await TargetEntry.findOne({ targetId: targetId, user: email });
-    if (existingEntry) {
+    const existingEntry = await TargetEntry.findOne({ targetId, user: email });
+    if (!existingEntry) {
         throw new Error('User not in target');
     }
 

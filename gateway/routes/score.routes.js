@@ -45,8 +45,9 @@ const router = express.Router();
 router.get('/getScore', async (req, res) => {
     try {
         const response = await authBreaker.fire(`${process.env.SCORE_SERVICE_URL}/getScore`, 'get', req.body);
-        res.status(response.status).send(response);
+        res.status(response.status).json(response.data);
     } catch (err) {
+        console.error(err);
         res.status(err.response?.status || 500).send(err.response?.data || {message: 'Kon score niet ophalen'});
     }
 });
