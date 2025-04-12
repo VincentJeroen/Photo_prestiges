@@ -29,7 +29,7 @@ services:
       - rabbitmq
     networks:
       - app-network
-        
+
   auth-db:
     image: mongo:8.0
     container_name: auth-db
