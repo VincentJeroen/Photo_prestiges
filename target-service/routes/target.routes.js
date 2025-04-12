@@ -30,7 +30,7 @@ router.post('/uploadPhoto', upload.single('image'), (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded');
     }
-    res.status(200).send({ photoUrl: req.file.filename });
+    res.status(200).send({ photoUrl: `/images/${req.file.filename}` });
 });
 
 router.get('/images/:filename', (req, res) => {

@@ -11,5 +11,6 @@ app.use(express.json());
 
 // Routes
 app.use('/', authRoutes);
+console.log('Auth service is running');
 
 export default app;

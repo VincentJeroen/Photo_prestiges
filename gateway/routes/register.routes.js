@@ -46,7 +46,7 @@ const router = express.Router();
  */
 router.post('/joinTarget', async (req, res) => {
     try {
-        const response = await registerBreaker.fire(`${process.env.REGISTER_SERVICE_URL}/isTargetJoinable`, 'post', req.body);
+        const response = await registerBreaker.fire(`${process.env.REGISTER_SERVICE_URL}/isTargetJoinable`, 'get', req.body);
         if (response.status !== 200) {
             return res.status(response.status).send({ message: 'Target is not joinable' });
         }
@@ -54,6 +54,7 @@ router.post('/joinTarget', async (req, res) => {
         const response2 = await registerBreaker.fire(`${process.env.SCORE_SERVICE_URL}/joinTarget`, 'post', req.body);
         return res.status(response2.status).json(response2.data);
     } catch (err) {
+        console.log(err);
         res.status(err.response?.status || 500).send(err.response?.data || { message: 'Failed to join target' });
     }
 });
@@ -160,6 +161,29 @@ router.post('/setTargetDuration', async (req, res) => {
         res.status(response.status).send(response.data);
     } catch (err) {
         res.status(err.response?.status || 500).send(err.response?.data || { message: 'Failed to set target duration' });
+    }
+});
+
+/**
+ * @swagger
+ * /getOverview:
+ *   get:
+ *     summary: Haal overview van alle huidige wedstrijden op
+ *     tags: [General]
+ *     responses:
+ *       200:
+ *         description: Duur succesvol ingesteld
+ *       400:
+ *         description: Ongeldige gegevens
+ *       500:
+ *         description: Interne serverfout
+ */
+router.get('/getOverview', async (req, res) => {
+    try {
+        const response = await registerBreaker.fire(`${process.env.REGISTER_SERVICE_URL}/getOverview`, 'get');
+        res.status(response.status).send(response.data);
+    } catch (err) {
+        res.status(err.response?.status || 500).send(err.response?.data || { message: 'Failed to get overview' });
     }
 });
 

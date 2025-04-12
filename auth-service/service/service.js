@@ -8,6 +8,7 @@ export async function registerUser({ email, password }) {
         throw new Error('User already exists');
     }
 
+    console.log(email + " : " + password);
     const user = new User({ email, password });
     await user.save();
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { createTarget, isTargetJoinable, joinTarget, setTargetDuration, startTarget } from '../service/service.js';
+import { createTarget, isTargetJoinable, setTargetDuration, startTarget, getOverview } from '../service/service.js';
 
 const router = express.Router();
 
@@ -9,16 +9,6 @@ router.get('/isTargetJoinable', async (req, res) => {
         res.status(200).send();
     } else {
         res.status(400).send();
-    }
-});
-
-router.post('/joinTarget', async (req, res) => {
-    try {
-        if (await isTargetJoinable(req.body)) {}
-
-        res.status(await joinTarget(req.body)).json({ message: 'Target joined successfully' });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
     }
 });
 
@@ -48,5 +38,13 @@ router.post('/startTarget', async (req, res) => {
     }
 });
 
+router.get('/getOverview', async (req, res) => {
+    try {
+        const overview = await getOverview();
+        res.status(200).json(overview);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
 
 export default router;

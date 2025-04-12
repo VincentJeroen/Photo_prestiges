@@ -13,23 +13,6 @@ export async function isTargetJoinable({targetId}) {
     return false;
 }
 
-export async function joinTarget({targetId, email}) {
-    const existingTarget = await Target.findById(targetId);
-    if (existingTarget) {
-        return 400;
-    }
-
-    // const existingTargetEntry = await TargetEntry.findOne({targetId: targetId, user: email});
-    // if (existingTargetEntry) {
-    //     return 400;
-    // } else {
-    //     const targetEntry = new TargetEntry({targetId: targetId, user: email});
-    //     await targetEntry.save();
-    //     return 201;
-    // }
-    return 321;
-}
-
 // As Owner
 export async function createTarget({email}) {
     const target = new Target({owner: email});
@@ -82,3 +65,7 @@ export async function finishTarget({targetId}) {
     //}
 }
 
+export async function getOverview() {
+    const targets = await Target.find({});
+    return targets;
+}

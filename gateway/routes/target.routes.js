@@ -6,8 +6,8 @@ import FormData from 'form-data';
 import CircuitBreaker from 'opossum';
 
 // Circuit Breaker
-const callService = async (url, method = 'get', data = null) => {
-    return axios({ method, url, data });
+const callService = async (url, method = 'get', data = null, options = {}) => {
+    return axios({ method, url, data, ...options });
 };
 
 const breakerOptions = {
@@ -21,21 +21,54 @@ const targetBreaker = new CircuitBreaker(callService, breakerOptions);
 const router = express.Router();
 const upload = multer({ dest: 'temp/' });
 
+/**
+ * @swagger
+ * /images/{filename}:
+ *   get:
+ *     summary: Haal een afbeelding op via bestandsnaam
+ *     tags: [Target]
+ *     parameters:
+ *       - in: path
+ *         name: filename
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: De bestandsnaam van de afbeelding
+ *     responses:
+ *       200:
+ *         description: Afbeelding succesvol opgehaald
+ *         content:
+ *           image/*:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: Afbeelding niet gevonden
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Image not found
+ *       500:
+ *         description: Interne serverfout
+ */
 router.get('/images/:filename', async (req, res) => {
     const filename = req.params.filename;
 
     try {
-        const imageResponse = await targetBreaker.axios({
-            method: 'get',
-            url: `${process.env.TARGET_SERVICE_URL}/images/${filename}`,
-            responseType: 'stream', // important for binary data
-        });
+        const imageResponse = await targetBreaker.fire(
+            `${process.env.TARGET_SERVICE_URL}/images/${filename}`,
+            'get',
+            null,
+            { responseType: 'stream' }
+        );
 
-        // Set the appropriate content type
         res.setHeader('Content-Type', imageResponse.headers['content-type']);
         res.setHeader('Content-Disposition', imageResponse.headers['content-disposition'] || 'inline');
 
-        // Pipe the image stream directly to the response
         imageResponse.data.pipe(res);
     } catch (error) {
         console.error('Error fetching image from service:', error.message);
@@ -97,12 +130,12 @@ router.post('/uploadPhoto', upload.single('image'), async (req, res) => {
 
         // Clean up temp file
         fs.unlinkSync(req.file.path);
-
         if (targetServiceResponse.status !== 200) {
             return res.status(targetServiceResponse.status).json({ message: targetServiceResponse.data });
         }
 
         // Call score service
+        
         const body = {
             targetId: req.body.targetId,
             email: req.body.email,

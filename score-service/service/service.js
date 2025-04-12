@@ -1,11 +1,18 @@
 import TargetEntry from '../models/target-entry.js';
 
 export async function generateScore({ targetId, email, photoUrl }) {
-    return { score: 10 };
+    const existingEntry = await TargetEntry.findOne({ targetId: targetId, user: email });
+    if (existingEntry) {
+        throw new Error('User not in target');
+    }
+
+    existingEntry.score = 10;
+    existingEntry.save();
+    return { score: existingEntry.score };
 }
 
 export async function joinTarget({ targetId, email }) {
-    const existingEntry = TargetEntry.findOne({ targetId: targetId, user: email });
+    const existingEntry = await TargetEntry.findOne({ targetId: targetId, user: email });
     if (existingEntry) {
         return false;
     }
@@ -18,4 +25,13 @@ export async function joinTarget({ targetId, email }) {
 
 export async function createNewEntry({ targetId, email }) {
 
+}
+
+export async function getScore({ targetId, email }) {
+    const targetEntry = await TargetEntry.findOne({ targetId: targetId, user: email });
+    if (!targetEntry) {
+        throw new Error('User not found in target');
+    }
+
+    return targetEntry.score;
 }
