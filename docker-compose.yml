@@ -51,7 +51,6 @@ services:
       - ./clock-service:/app
       - /app/node_module
     depends_on:
-      - clock-db
       - rabbitmq
     networks:
       - app-network
