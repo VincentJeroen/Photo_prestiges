@@ -55,16 +55,6 @@ services:
       - rabbitmq
     networks:
       - app-network
-        
-  clock-db:
-    image: mongo:8.0
-    ports:
-      - "27018:27017"
-    container_name: clock-db
-    volumes:
-      - clock-db-data:/data/db
-    networks:
-      - app-network
 
   mail-service:
     build: ./mail-service
@@ -174,7 +164,6 @@ networks:
 
 volumes:
   auth-db-data:
-  clock-db-data:
   register-db-data:
   score-db-data:
   target-db-data:
