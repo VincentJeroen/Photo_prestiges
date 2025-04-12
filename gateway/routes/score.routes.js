@@ -60,13 +60,31 @@ router.post('/getScore', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /getAllScore:
+ *   get:
+ *     summary: Haal alle scores op
+ *     tags: [Score]
+ *     responses:
+ *       200:
+ *         description: Alle scores succesvol opgehaald
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *       500:
+ *         description: Interne serverfout
+ */
 router.get('/getAllScore', async (req, res) => {
     try {
         const response = await authBreaker.fire(`${process.env.SCORE_SERVICE_URL}/getAllScore`, 'get', req.body);
         res.status(response.status).json(response.data);
     } catch (err) {
         console.error(err);
-        res.status(err.response?.status || 500).send(err.response?.data || {message: 'Kon score niet ophalen'});
+        res.status(err.response?.status || 500).send(err.response?.data || { message: 'Kon scores niet ophalen' });
     }
 });
 
