@@ -35,3 +35,12 @@ export async function getScore({ targetId, email }) {
 
     return targetEntry.score;
 }
+
+export async function getAllScore({ targetId }) {
+    const entries = await TargetEntry.find({ targetId: targetId });
+    if (!entries) {
+        throw new Error('No entries found');
+    }
+
+    return entries;
+}

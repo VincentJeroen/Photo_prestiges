@@ -60,4 +60,14 @@ router.post('/getScore', async (req, res) => {
     }
 });
 
+router.get('/getAllScore', async (req, res) => {
+    try {
+        const response = await authBreaker.fire(`${process.env.SCORE_SERVICE_URL}/getAllScore`, 'get', req.body);
+        res.status(response.status).json(response.data);
+    } catch (err) {
+        console.error(err);
+        res.status(err.response?.status || 500).send(err.response?.data || {message: 'Kon score niet ophalen'});
+    }
+});
+
 export default router;
