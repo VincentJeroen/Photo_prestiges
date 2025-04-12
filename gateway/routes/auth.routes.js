@@ -4,7 +4,7 @@ import CircuitBreaker from 'opossum';
 
 // Circuit Breaker
 const callService = async (url, method = 'get', data = null) => {
-    return axios({method, url, data});
+    return axios({ method, url, data });
 };
 
 const breakerOptions = {
@@ -21,7 +21,7 @@ const router = express.Router();
  * @swagger
  * /create-account:
  *   post:
- *     summary: Maak een nieuwe gebruiker aan
+ *     summary: Registreer een nieuwe gebruiker
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -29,18 +29,38 @@ const router = express.Router();
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - email
+ *               - password
  *             properties:
  *               email:
  *                 type: string
+ *                 format: email
+ *                 example: user@example.com
  *               password:
  *                 type: string
+ *                 format: password
+ *                 example: secret123
  *     responses:
  *       201:
  *         description: Gebruiker succesvol aangemaakt
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Account created successfully
+ *               userId: abc123
  *       400:
- *         description: Fout bij het aanmaken van de gebruiker
+ *         description: Ongeldige invoer of fout bij registratie
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Email already exists
  *       500:
  *         description: Interne serverfout
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Failed to create an account
  */
 router.post('/create-account', async (req, res) => {
     try {
@@ -56,7 +76,7 @@ router.post('/create-account', async (req, res) => {
  * @swagger
  * /login:
  *   post:
- *     summary: Log in met bestaande gebruiker
+ *     summary: Log in als bestaande gebruiker
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -64,25 +84,47 @@ router.post('/create-account', async (req, res) => {
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - email
+ *               - password
  *             properties:
  *               email:
  *                 type: string
+ *                 format: email
+ *                 example: user@example.com
  *               password:
  *                 type: string
+ *                 format: password
+ *                 example: secret123
  *     responses:
  *       200:
  *         description: Succesvolle login
+ *         content:
+ *           application/json:
+ *             example:
+ *               token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *               user:
+ *                 id: abc123
+ *                 email: user@example.com
  *       401:
  *         description: Ongeldige inloggegevens
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Invalid email or password
  *       500:
  *         description: Interne serverfout
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Failed to login
  */
 router.post('/login', async (req, res) => {
     try {
         const response = await authBreaker.fire(`${process.env.AUTH_SERVICE_URL}/login`, 'post', req.body);
         res.status(response.status).send(response.data);
     } catch (err) {
-        res.status(err.response?.status || 500).send(err.response?.data || {message: 'Failed to login'});
+        res.status(err.response?.status || 500).send(err.response?.data || { message: 'Failed to login' });
     }
 });
 

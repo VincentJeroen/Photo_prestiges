@@ -4,7 +4,7 @@ import CircuitBreaker from 'opossum';
 
 // Circuit Breaker
 const callService = async (url, method = 'get', data = null) => {
-    return axios({method, url, data});
+    return axios({ method, url, data });
 };
 
 const breakerOptions = {
@@ -19,9 +19,9 @@ const router = express.Router();
 
 /**
  * @swagger
- * /login:
+ * /getScore:
  *   post:
- *     summary: Log in met bestaande gebruiker
+ *     summary: Haal de score op van een gebruiker voor een specifiek target
  *     tags: [Score]
  *     requestBody:
  *       required: true
@@ -29,26 +29,34 @@ const router = express.Router();
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - targetId
+ *               - email
  *             properties:
  *               targetId:
  *                 type: string
+ *                 description: Het ID van het target
  *               email:
  *                 type: string
+ *                 description: Het e-mailadres van de gebruiker
+ *             example:
+ *               targetId: "target123"
+ *               email: "user@example.com"
  *     responses:
  *       200:
- *         description: Score opgehaald
+ *         description: Score succesvol opgehaald
  *       401:
  *         description: Ongeldige gegevens
  *       500:
  *         description: Interne serverfout
  */
-router.get('/getScore', async (req, res) => {
+router.post('/getScore', async (req, res) => {
     try {
-        const response = await authBreaker.fire(`${process.env.SCORE_SERVICE_URL}/getScore`, 'get', req.body);
+        const response = await authBreaker.fire(`${process.env.SCORE_SERVICE_URL}/getScore`, 'post', req.body);
         res.status(response.status).json(response.data);
     } catch (err) {
         console.error(err);
-        res.status(err.response?.status || 500).send(err.response?.data || {message: 'Kon score niet ophalen'});
+        res.status(err.response?.status || 500).send(err.response?.data || { message: 'Kon score niet ophalen' });
     }
 });
 

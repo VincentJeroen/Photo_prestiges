@@ -21,7 +21,7 @@ const router = express.Router();
  * @swagger
  * /joinTarget:
  *   post:
- *     summary: Voeg een target toe als het joinable is
+ *     summary: Voeg een gebruiker toe aan een target als het mogelijk is
  *     tags: [Register]
  *     requestBody:
  *       required: true
@@ -29,24 +29,30 @@ const router = express.Router();
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - targetId
+ *               - userId
  *             properties:
  *               targetId:
  *                 type: string
  *                 description: Het ID van het target
  *               userId:
  *                 type: string
- *                 description: Het ID van de gebruiker die wil joinen
+ *                 description: Het ID van de gebruiker die wil deelnemen
+ *             example:
+ *               targetId: "target123"
+ *               userId: "user456"
  *     responses:
  *       200:
- *         description: Doel succesvol toegevoegd
+ *         description: Gebruiker succesvol toegevoegd aan target
  *       400:
- *         description: Ongeldige gegevens
+ *         description: Ongeldige gegevens of target niet joinable
  *       500:
  *         description: Interne serverfout
  */
 router.post('/joinTarget', async (req, res) => {
     try {
-        const response = await registerBreaker.fire(`${process.env.REGISTER_SERVICE_URL}/isTargetJoinable`, 'get', req.body);
+        const response = await registerBreaker.fire(`${process.env.REGISTER_SERVICE_URL}/isTargetJoinable`, 'post', req.body);
         if (response.status !== 200) {
             return res.status(response.status).send({ message: 'Target is not joinable' });
         }
@@ -71,13 +77,17 @@ router.post('/joinTarget', async (req, res) => {
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - targetId
  *             properties:
  *               targetId:
  *                 type: string
  *                 description: Het ID van het target
+ *             example:
+ *               targetId: "target123"
  *     responses:
  *       200:
- *         description: Doel succesvol gestart
+ *         description: Target succesvol gestart
  *       400:
  *         description: Ongeldige gegevens
  *       500:
@@ -104,6 +114,9 @@ router.post('/startTarget', async (req, res) => {
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - name
+ *               - duration
  *             properties:
  *               name:
  *                 type: string
@@ -111,6 +124,9 @@ router.post('/startTarget', async (req, res) => {
  *               duration:
  *                 type: integer
  *                 description: Duur van het target in seconden
+ *             example:
+ *               name: "Hardlopen Challenge"
+ *               duration: 1800
  *     responses:
  *       200:
  *         description: Target succesvol aangemaakt
@@ -132,7 +148,7 @@ router.post('/createTarget', async (req, res) => {
  * @swagger
  * /setTargetDuration:
  *   post:
- *     summary: Stel de duur van een target in
+ *     summary: Pas de duur van een target aan
  *     tags: [Register]
  *     requestBody:
  *       required: true
@@ -140,16 +156,22 @@ router.post('/createTarget', async (req, res) => {
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - targetId
+ *               - duration
  *             properties:
  *               targetId:
  *                 type: string
  *                 description: Het ID van het target
  *               duration:
  *                 type: integer
- *                 description: Duur van het target in seconden
+ *                 description: Nieuwe duur in seconden
+ *             example:
+ *               targetId: "target123"
+ *               duration: 3600
  *     responses:
  *       200:
- *         description: Duur succesvol ingesteld
+ *         description: Duur succesvol aangepast
  *       400:
  *         description: Ongeldige gegevens
  *       500:
@@ -168,13 +190,13 @@ router.post('/setTargetDuration', async (req, res) => {
  * @swagger
  * /getOverview:
  *   get:
- *     summary: Haal overview van alle huidige wedstrijden op
+ *     summary: Haal een overzicht op van alle actieve targets
  *     tags: [General]
  *     responses:
  *       200:
- *         description: Duur succesvol ingesteld
+ *         description: Overzicht succesvol opgehaald
  *       400:
- *         description: Ongeldige gegevens
+ *         description: Ongeldige aanvraag
  *       500:
  *         description: Interne serverfout
  */

@@ -44,14 +44,6 @@ const upload = multer({ dest: 'temp/' });
  *               format: binary
  *       404:
  *         description: Afbeelding niet gevonden
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Image not found
  *       500:
  *         description: Interne serverfout
  */
@@ -88,6 +80,10 @@ router.get('/images/:filename', async (req, res) => {
  *         multipart/form-data:
  *           schema:
  *             type: object
+ *             required:
+ *               - image
+ *               - targetId
+ *               - email
  *             properties:
  *               image:
  *                 type: string
@@ -108,47 +104,40 @@ router.get('/images/:filename', async (req, res) => {
  *         description: Interne serverfout
  */
 router.post('/uploadPhoto', upload.single('image'), async (req, res) => {
-    if (!req.file) {
-        return res.status(400).send('No file uploaded');
-    }
-
-    if (!req.body.targetId) {
-        return res.status(400).send('No targetId provided');
-    }
-
-    if (!req.body.email) {
-        return res.status(400).send('No email provided');
-    }
+    if (!req.file) return res.status(400).send('No file uploaded');
+    if (!req.body.targetId) return res.status(400).send('No targetId provided');
+    if (!req.body.email) return res.status(400).send('No email provided');
 
     try {
         const form = new FormData();
         form.append('image', fs.createReadStream(req.file.path), req.file.originalname);
 
-        const targetServiceResponse = await targetBreaker.fire(`${process.env.TARGET_SERVICE_URL}/uploadPhoto`, 'post', form, {
-            headers: form.getHeaders(),
-        });
+        const targetServiceResponse = await targetBreaker.fire(
+            `${process.env.TARGET_SERVICE_URL}/uploadPhoto`,
+            'post',
+            form,
+            { headers: form.getHeaders() }
+        );
 
-        // Clean up temp file
         fs.unlinkSync(req.file.path);
+
         if (targetServiceResponse.status !== 200) {
             return res.status(targetServiceResponse.status).json({ message: targetServiceResponse.data });
         }
 
-        // Call score service
-        
         const body = {
             targetId: req.body.targetId,
             email: req.body.email,
             photoUrl: targetServiceResponse.data.photoUrl,
         };
-        console.log('dit print die wel');
-        const scoreServiceResponse = await targetBreaker.fire(`${process.env.SCORE_SERVICE_URL}/generate-score`, 'post', body);
-        console.log('dit print die niet');
-        if (scoreServiceResponse.status === 200) {
-            return res.status(scoreServiceResponse.status).json(scoreServiceResponse.data);
-        }
 
-        return res.status(200).json(scoreServiceResponse.data);
+        const scoreServiceResponse = await targetBreaker.fire(
+            `${process.env.SCORE_SERVICE_URL}/generate-score`,
+            'post',
+            body
+        );
+
+        return res.status(scoreServiceResponse.status).json(scoreServiceResponse.data);
     } catch (error) {
         console.error('Error uploading file:', error.message);
         res.status(500).send('Failed to upload file');
@@ -167,6 +156,9 @@ router.post('/uploadPhoto', upload.single('image'), async (req, res) => {
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - targetId
+ *               - photoId
  *             properties:
  *               targetId:
  *                 type: string
@@ -203,6 +195,9 @@ router.post('/deletePhoto', async (req, res) => {
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - targetId
+ *               - participantId
  *             properties:
  *               targetId:
  *                 type: string
@@ -212,7 +207,7 @@ router.post('/deletePhoto', async (req, res) => {
  *                 description: Het ID van de deelnemer wiens foto verwijderd moet worden
  *     responses:
  *       200:
- *         description: Deelnemers foto succesvol verwijderd
+ *         description: Deelnemersfoto succesvol verwijderd
  *       400:
  *         description: Ongeldige gegevens
  *       500:
