@@ -133,18 +133,7 @@ services:
       - ./target-service:/app
       - /app/node_module
     depends_on:
-      - target-db
       - rabbitmq
-    networks:
-      - app-network
-
-  target-db:
-    image: mongo:8.0
-    ports:
-      - "27023:27017"
-    container_name: target-db
-    volumes:
-      - target-db-data:/data/db
     networks:
       - app-network
 
