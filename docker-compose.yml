@@ -159,21 +159,6 @@ services:
     networks:
       - app-network
 
-  image-server:
-    build: ./image-server
-    container_name: image-server
-    env_file:
-      - ./image-server/.env
-    ports:
-      - "3007"
-    volumes:
-      - ./image-server:/app
-      - /app/node_module
-    depends_on:
-      - rabbitmq
-    networks:
-      - app-network
-
   rabbitmq:
     build: ./rabbitmq
     container_name: rabbitmq

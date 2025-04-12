@@ -21,6 +21,28 @@ const targetBreaker = new CircuitBreaker(callService, breakerOptions);
 const router = express.Router();
 const upload = multer({ dest: 'temp/' });
 
+router.get('/images/:filename', async (req, res) => {
+    const filename = req.params.filename;
+
+    try {
+        const imageResponse = await targetBreaker.axios({
+            method: 'get',
+            url: `${process.env.TARGET_SERVICE_URL}/images/${filename}`,
+            responseType: 'stream', // important for binary data
+        });
+
+        // Set the appropriate content type
+        res.setHeader('Content-Type', imageResponse.headers['content-type']);
+        res.setHeader('Content-Disposition', imageResponse.headers['content-disposition'] || 'inline');
+
+        // Pipe the image stream directly to the response
+        imageResponse.data.pipe(res);
+    } catch (error) {
+        console.error('Error fetching image from service:', error.message);
+        res.status(404).json({ message: 'Image not found' });
+    }
+});
+
 /**
  * @swagger
  * /uploadPhoto:
