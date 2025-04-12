@@ -47,7 +47,8 @@ router.post('/create-account', async (req, res) => {
         const response = await authBreaker.fire(`${process.env.AUTH_SERVICE_URL}/create-account`, 'post', req.body);
         res.status(response.status).send(response.data);
     } catch (err) {
-        res.status(err.response?.status || 500).send(err.response?.data || {message: 'Failed to create an account'});
+        console.log(err);
+        res.status(err.response?.status || 500).send(err.response?.data || { message: 'Failed to create an account' });
     }
 });
 

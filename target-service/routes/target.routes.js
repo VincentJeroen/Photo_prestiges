@@ -33,6 +33,18 @@ router.post('/uploadPhoto', upload.single('image'), (req, res) => {
     res.status(200).send({ photoUrl: req.file.filename });
 });
 
+router.get('/images/:filename', (req, res) => {
+    const filename = req.params.filename;
+    const filePath = path.join(__dirname, '..', 'uploads', filename);
+
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            console.error('Error sending file:', err);
+            res.status(404).send('Image not found');
+        }
+    });
+});
+
 // router.get('/images/:filename', async (req, res) => {
 //     try {
 //         // const filename = req.params.filename;
