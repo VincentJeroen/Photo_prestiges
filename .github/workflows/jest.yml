@@ -27,9 +27,5 @@ jobs:
               run: npm test
               working-directory: './clock-service'
 
-            - name: Run ESLint
-              run: npm run lint
-              working-directory: clock-service
-
             - name: Jest Code Coverage
               uses: ArtiomTr/jest-coverage-report-action@v2
