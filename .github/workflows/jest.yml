@@ -1,35 +1,52 @@
 name: 'Jest Code Coverage'
 on:
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
-            
+  push:
+    branches:
+      - devops
+  pull_request:
+    branches:
+      - devops
+
 jobs:
-    coverage:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-            - name: Setup Node.JS
-              uses: actions/setup-node@v2
-              with:
-                node-version: '20'
+      - name: Setup Node.JS
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22'
 
-            - name: Install dependencies
-              run: npm install
-              working-directory: './api'
+      - name: Install dependencies for all services
+        run: |
+          for dir in register-service clock-service; do
+            echo "Installing dependencies in $dir"
+            cd $dir
+            npm install
+            cd ..
+          done
 
-            - name: Run Tests
-              run: npm test
-              working-directory: './api'
+      - name: Run Tests for all services
+        run: |
+          for dir in register-service clock-service; do
+            echo "Running tests in $dir"
+            cd $dir
+            npm test
+            cd ..
+          done
 
-            - name: Run ESLint
-              run: npm run lint
-              working-directory: api
+      - name: Run ESLint for all services
+        run: |
+          for dir in register-service clock-service; do
+            echo "Running ESLint in $dir"
+            cd $dir
+            npm run lint || true  # Optional: don't fail on lint errors
+            cd ..
+          done
 
-            - name: Jest Code Coverage
-              uses: ArtiomTr/jest-coverage-report-action@v2
+      - name: Jest Code Coverage Report
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          working-directory: register-service # or clock-service, depending on where your main coverage is

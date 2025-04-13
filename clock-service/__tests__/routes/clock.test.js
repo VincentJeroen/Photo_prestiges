@@ -1,7 +1,11 @@
 describe('Clock Test 1', () => {
-    expect(true).toBe(true);
+    it('should pass the first test', () => {
+        expect(true).toBe(true);
+    });
 });
 
 describe('Clock Test 2', () => {
-    expect(true).toBe(true);
+    it('should pass the second test', () => {
+        expect(true).toBe(true);
+    });
 });

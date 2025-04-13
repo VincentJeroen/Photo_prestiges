@@ -3,8 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  },
   "scripts": {
-    "start": "nodemon --legacy-watch bin/www"
+    "start": "nodemon --legacy-watch bin/www",
+    "test": "jest",
+    "lint": "npx eslint ."
   },
   "dependencies": {
     "amqplib": "^0.10.7",
