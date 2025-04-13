@@ -2,7 +2,7 @@
 
 set -e
 
-services=("auth-service" "clock-service" "gateway" "image-server" "mail-service" "read-service" "register-service" "score-service" "target-service")
+services=("auth-service" "clock-service" "gateway" "mail-service" "register-service" "score-service" "target-service")
 
 for service in "${services[@]}"
 do

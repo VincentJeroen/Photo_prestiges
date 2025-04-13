@@ -5,15 +5,16 @@ import authRoutes from './routes/auth.routes.js';
 import targetRoutes from './routes/target.routes.js';
 import registerRoutes from './routes/register.routes.js';
 import scoreRoutes from './routes/score.routes.js';
+import {authenticateToken} from "./middlewares/jwt-token-middleware.js";
 
 const app = express();
 app.use(express.json());
 
 // Routes
 app.use('/', authRoutes);
-app.use('/', targetRoutes);
-app.use('/', registerRoutes);
-app.use('/', scoreRoutes);
+app.use('/', authenticateToken, targetRoutes);
+app.use('/', authenticateToken, registerRoutes);
+app.use('/', authenticateToken, scoreRoutes);
 
 app.use('/api-docs', serve, setup(swaggerSpec));
 
