@@ -20,7 +20,7 @@ services:
     env_file:
       - ./auth-service/.env
     ports:
-      - "3008"
+      - "3008:3008"
     volumes:
       - ./auth-service:/app
       - /app/node_module
@@ -46,7 +46,7 @@ services:
     env_file:
       - ./clock-service/.env
     ports:
-      - "3001"
+      - "3001:3001"
     volumes:
       - ./clock-service:/app
       - /app/node_module
@@ -61,7 +61,7 @@ services:
     env_file:
       - ./mail-service/.env
     ports:
-      - "3002"
+      - "3002:3002"
     volumes:
       - ./mail-service:/app
       - /app/node_module
@@ -76,7 +76,7 @@ services:
     env_file:
       - ./register-service/.env
     ports:
-      - "3004"
+      - "3004:3004"
     volumes:
       - ./register-service:/app
       - /app/node_module
@@ -102,7 +102,7 @@ services:
     env_file:
       - ./score-service/.env
     ports:
-      - "3005"
+      - "3005:3005"
     volumes:
       - ./score-service:/app
       - /app/node_module
@@ -128,7 +128,7 @@ services:
     env_file:
       - ./target-service/.env
     ports:
-      - "3006"
+      - "3006:3006"
     volumes:
       - ./target-service:/app
       - /app/node_module
