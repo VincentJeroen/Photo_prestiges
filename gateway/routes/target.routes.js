@@ -109,9 +109,17 @@ router.post('/uploadPhoto', upload.single('image'), async (req, res) => {
     if (!req.body.email) return res.status(400).send('No email provided');
 
     try {
+        const targetResponse = await targetBreaker.fire(
+            `${process.env.REGISTER_SERVICE_URL}/getTarget`,
+            'get',
+            { targetId: req.body.targetId }
+        );
+        if (targetResponse.status !== 200) {
+            return res.status(404).json({ message: 'Target doesn\'t exist' });
+        }
+
         const form = new FormData();
         form.append('image', fs.createReadStream(req.file.path), req.file.originalname);
-
         const targetServiceResponse = await targetBreaker.fire(
             `${process.env.TARGET_SERVICE_URL}/uploadPhoto`,
             'post',
@@ -125,19 +133,24 @@ router.post('/uploadPhoto', upload.single('image'), async (req, res) => {
             return res.status(targetServiceResponse.status).json({ message: targetServiceResponse.data });
         }
 
-        const body = {
-            targetId: req.body.targetId,
-            email: req.body.email,
-            photoUrl: targetServiceResponse.data.photoUrl,
-        };
+        if (targetResponse.data.email === req.body.owner) {
+            await targetBreaker.fire(`${process.env.REGISTER_SERVICE_URL}/startTarget`, 'post', req.body);
+            return res.status(200).json({ message: 'Target started' });
+        } else {
+            const body = {
+                targetId: req.body.targetId,
+                email: req.body.email,
+                photoUrl: targetServiceResponse.data.photoUrl,
+            };
+    
+            const scoreServiceResponse = await targetBreaker.fire(
+                `${process.env.SCORE_SERVICE_URL}/generate-score`,
+                'post',
+                body
+            );
 
-        const scoreServiceResponse = await targetBreaker.fire(
-            `${process.env.SCORE_SERVICE_URL}/generate-score`,
-            'post',
-            body
-        );
-
-        return res.status(scoreServiceResponse.status).json(scoreServiceResponse.data);
+            return res.status(scoreServiceResponse.status).json(scoreServiceResponse.data);
+        }
     } catch (error) {
         console.error('Error uploading file:', error.message);
         res.status(500).send('Failed to upload file');

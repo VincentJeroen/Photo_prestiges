@@ -50,9 +50,9 @@ const router = express.Router();
  *       500:
  *         description: Interne serverfout
  */
-router.post('/getScore', async (req, res) => {
+router.get('/getScore', async (req, res) => {
     try {
-        const response = await authBreaker.fire(`${process.env.SCORE_SERVICE_URL}/getScore`, 'post', req.body);
+        const response = await authBreaker.fire(`${process.env.SCORE_SERVICE_URL}/getScore`, 'get', req.body);
         res.status(response.status).json(response.data);
     } catch (err) {
         console.error(err);

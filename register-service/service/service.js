@@ -69,3 +69,8 @@ export async function getOverview() {
     const targets = await Target.find({});
     return targets;
 }
+
+export async function getTarget({targetId}) {
+    const target = await Target.findById(targetId);
+    return target;
+}

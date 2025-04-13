@@ -1,5 +1,5 @@
 import express from 'express';
-import { createTarget, isTargetJoinable, setTargetDuration, startTarget, getOverview } from '../service/service.js';
+import { createTarget, isTargetJoinable, setTargetDuration, startTarget, getOverview, getTarget } from '../service/service.js';
 
 const router = express.Router();
 
@@ -42,6 +42,19 @@ router.get('/getOverview', async (req, res) => {
     try {
         const overview = await getOverview();
         res.status(200).json(overview);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+router.get('/getTarget', async (req, res) => {
+    try {
+        const target = await getTarget(req.body);
+        if (!target) {
+            return res.status(404).json({ message: 'Target not found' });
+        }
+
+        res.status(200).json(target);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
