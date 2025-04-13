@@ -48,7 +48,7 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: Score succesvol opgehaald
- *       401:
+ *       400:
  *         description: Ongeldige gegevens
  *       500:
  *         description: Interne serverfout

@@ -109,7 +109,7 @@ router.post('/create-account', async (req, res) => {
  *               user:
  *                 id: abc123
  *                 email: user@example.com
- *       401:
+ *       400:
  *         description: Ongeldige inloggegevens
  *         content:
  *           application/json:
