@@ -1,0 +1,55 @@
+name: Clock Service Workflow
+
+on:
+  push:
+    branches:
+      - 'devops'
+  pull_request:
+    branches:
+      - devops
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      checks: write
+      pull-requests: write  
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: List files in root directory
+        run: ls -R
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      # Clock Service
+      - name: Install dependencies | Clock Service
+        run: npm install
+        working-directory: ./clock-service
+        
+      - name: List files in clock-service directory (verify correct path)
+        run: ls -R ./clock-service 
+
+      #- name: Run ESLint | Clock Service
+      #  run: npx eslint '**/*.js' --max-warnings=0
+      #  working-directory: ./clock-service
+
+      - name: Run Tests | Clock Service
+        run: npm test -- --coverage
+        working-directory: ./clock-service
+
+      # Genereer de Jest coverage rapporten
+      - name: Jest coverage report | Clock Service
+        uses: ArtiomTr/jest-coverage-report-action@v2.3.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          test-script: npm test -- --coverage
+          working-directory: ./clock-service 
+          threshold: 80
+          package-manager: npm
+          output: comment
