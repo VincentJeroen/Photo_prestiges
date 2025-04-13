@@ -1,4 +1,4 @@
-name: Clock Service Workflow
+name: Register Service Workflow
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 22
-          
+
       # Register Service
       - name: Install dependencies | Register Service
         run: npm install
