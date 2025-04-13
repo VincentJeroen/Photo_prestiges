@@ -7,6 +7,11 @@ on:
     branches:
       - devops
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 jobs:
   coverage:
     runs-on: ubuntu-latest
@@ -50,3 +55,8 @@ jobs:
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           working-directory: register-service # or clock-service, depending on where your main coverage is
+
+      - name: Jest Code Coverage Report
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          working-directory: clock-service # or clock-service, depending on where your main coverage is
