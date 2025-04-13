@@ -11,6 +11,9 @@ const breakerOptions = {
     timeout: 5000,
     errorThresholdPercentage: 50,
     resetTimeout: 10000,
+    errorFilter: (err, path) => {
+        return err?.response?.status === 400;
+    }
 };
 
 const authBreaker = new CircuitBreaker(callService, breakerOptions);

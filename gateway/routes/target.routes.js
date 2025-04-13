@@ -14,6 +14,9 @@ const breakerOptions = {
     timeout: 5000,
     errorThresholdPercentage: 50,
     resetTimeout: 10000,
+    errorFilter: (err, path) => {
+        return err?.response?.status === 400;
+    }
 };
 
 const targetBreaker = new CircuitBreaker(callService, breakerOptions);
@@ -133,7 +136,7 @@ router.post('/uploadPhoto', upload.single('image'), async (req, res) => {
             return res.status(targetServiceResponse.status).json({ message: targetServiceResponse.data });
         }
 
-        if (targetResponse.data.email === req.body.owner) {
+        if (targetResponse.data.owner === req.body.email) {
             await targetBreaker.fire(`${process.env.REGISTER_SERVICE_URL}/startTarget`, 'post', req.body);
             return res.status(200).json({ message: 'Target started' });
         } else {

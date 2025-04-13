@@ -15,6 +15,10 @@ router.get('/isTargetJoinable', async (req, res) => {
 // Owner
 router.post('/createTarget', async (req, res) => {
     try {
+        if (!req.body.email) {
+            return res.status(400).json({ message: 'Emailed required' });
+        }
+
         res.status(200).json({ targetId: await createTarget(req.body)} );
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -23,6 +27,10 @@ router.post('/createTarget', async (req, res) => {
 
 router.post('/setTargetDuration', async (req, res) => {
     try {
+        if (!req.body.targetId || !req.body.duration) {
+            return res.status(400).json({ message: 'Target ID and duration are required' });
+        }
+
         res.status(await setTargetDuration(req.body)).json({ message: 'Target duration set successfully' });
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -31,6 +39,10 @@ router.post('/setTargetDuration', async (req, res) => {
 
 router.post('/startTarget', async (req, res) => {
     try {
+        if (!req.body.targetId) {
+            return res.status(400).json({ message: 'Target ID is required' });
+        }
+
         const status = await startTarget(req.body);
         res.status(status).json({ message: 'Target started successfully' });
     } catch (error) {
@@ -49,6 +61,10 @@ router.get('/getOverview', async (req, res) => {
 
 router.get('/getTarget', async (req, res) => {
     try {
+        if (!req.body.targetId) {
+            return res.status(400).json({ message: 'Target ID is required' });
+        }
+
         const target = await getTarget(req.body);
         if (!target) {
             return res.status(404).json({ message: 'Target not found' });
