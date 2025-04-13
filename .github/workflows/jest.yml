@@ -34,6 +34,10 @@ jobs:
       - name: List files in clock-service directory (verify correct path)
         run: ls -R ./clock-service 
 
+      #- name: Run ESLint
+      #  run: npx eslint '**/*.js' --max-warnings=0
+      #  working-directory: ./clock-service
+
       - name: Run Tests
         run: npm test -- --coverage
         working-directory: ./clock-service
