@@ -167,6 +167,16 @@ services:
     networks:
       - app-network
 
+  grafana:
+    build: ./grafana
+    container_name: grafana
+    ports:
+      - "3009:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - app-network
+
   rabbitmq:
     build: ./rabbitmq
     container_name: rabbitmq
