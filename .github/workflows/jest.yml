@@ -19,7 +19,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: List files in root directory (to check if clock-service exists)
+      - name: List files in root directory
         run: ls -R
 
       - name: Set up Node.js
@@ -57,14 +57,14 @@ jobs:
       # Register Service
       - name: Install dependencies | Register Service
         run: npm install
-        working-directory: ./Register-service
+        working-directory: ./register-service
         
       - name: List files in Register-service directory (verify correct path)
-        run: ls -R ./Register-service 
+        run: ls -R ./register-service 
 
       #- name: Run ESLint | Register Service
       #  run: npx eslint '**/*.js' --max-warnings=0
-      #  working-directory: ./Register-service
+      #  working-directory: ./register-service
 
       - name: Run Tests | Register Service
         run: npm test -- --coverage
