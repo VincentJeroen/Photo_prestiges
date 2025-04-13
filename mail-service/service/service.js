@@ -2,12 +2,12 @@ import sgMail from '@sendgrid/mail';
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-export async function sendMail({ to, subject, text, html }) {
+export async function sendMail({ to, subject, html }) {
     const msg = {
         to: to,
         from: process.env.SENDGRID_FROM_ADDRESS,
         subject: subject,
-        text: text,
+        text: html.replace(/<[^>]+>/g, ''),
         html: html,
     };
 

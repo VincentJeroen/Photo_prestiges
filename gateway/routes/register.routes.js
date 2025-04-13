@@ -52,7 +52,7 @@ const router = express.Router();
  */
 router.post('/joinTarget', async (req, res) => {
     try {
-        const response = await registerBreaker.fire(`${process.env.REGISTER_SERVICE_URL}/isTargetJoinable`, 'post', req.body);
+        const response = await registerBreaker.fire(`${process.env.REGISTER_SERVICE_URL}/isTargetJoinable`, 'get', req.body);
         if (response.status !== 200) {
             return res.status(response.status).send({ message: 'Target is not joinable' });
         }

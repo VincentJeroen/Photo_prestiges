@@ -1,4 +1,5 @@
 import TargetEntry from '../models/target-entry.js';
+import { publishToExchange } from '../utils/rabbitmq.js';
 
 export async function generateScore({ targetId, email, photoUrl }) {
     const existingEntry = await TargetEntry.findOne({ targetId, user: email });
@@ -11,7 +12,7 @@ export async function generateScore({ targetId, email, photoUrl }) {
     return { score: existingEntry.score };
 }
 
-export async function joinTarget({ targetId, email }) {
+export async function joinTarget({ targetId, email, sendMail }) {
     const existingEntry = await TargetEntry.findOne({ targetId: targetId, user: email });
     if (existingEntry) {
         return false;
@@ -19,6 +20,15 @@ export async function joinTarget({ targetId, email }) {
 
     const targetEntry = new TargetEntry({ targetId: targetId, user: email });
     await targetEntry.save();
+
+    if (sendMail) {
+        await publishToExchange(
+            'mailExchange',
+            JSON.stringify({ to: email, subject: 'You joined the target!', html: 'Good luck!' }),
+            'score.sendMail',
+            'topic'
+        );
+    }
 
     return true;
 };
