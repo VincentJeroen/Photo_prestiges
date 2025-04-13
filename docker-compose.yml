@@ -55,6 +55,16 @@ services:
     networks:
       - app-network
 
+  clock-db:
+    image: mongo:8.0
+    container_name: clock-db
+    ports:
+      - "27034:27017"
+    volumes:
+      - clock-db-data:/data/db
+    networks:
+      - app-network
+
   mail-service:
     build: ./mail-service
     container_name: mail-service
@@ -155,3 +165,4 @@ volumes:
   register-db-data:
   score-db-data:
   target-db-data:
+  clock-db-data:
