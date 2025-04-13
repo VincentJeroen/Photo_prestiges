@@ -108,6 +108,7 @@ services:
 
   register-db-exporter:
     image: bitnami/mongodb-exporter:latest
+    container_name: register-db-exporter
     environment:
       - MONGODB_URI=mongodb://register-db:27017
     depends_on:
@@ -162,7 +163,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus/monitoring.yml:/etc/prometheus/monitoring.yml
+      - ./prometheus/monitoring.yml:/etc/prometheus/prometheus.yml
     networks:
       - app-network
 
