@@ -54,11 +54,13 @@ jobs:
       - name: Jest Code Coverage Report | Register Service
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
-          working-directory: register-service
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          working-directory: register-service
+          output: ${{ github.event_name == 'pull_request' && 'comment' || 'summary' }}
 
       - name: Jest Code Coverage Report | Clock Service
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
-          working-directory: clock-service
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          working-directory: clock-service
+          output: ${{ github.event_name == 'pull_request' && 'comment' || 'summary' }}
