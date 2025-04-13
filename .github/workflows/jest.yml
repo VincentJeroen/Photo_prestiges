@@ -1,31 +1,82 @@
-name: 'Jest Code Coverage'
+name: API CI Workflow
+
 on:
-    push:
-        branches:
-            - devops
-    pull_request:
-        branches:
-            - devops
-            
+  push:
+    branches:
+      - 'devops'
+  pull_request:
+    branches:
+      - devops
+
 jobs:
-    coverage:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      checks: write
+      pull-requests: write  
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-            - name: Setup Node.JS
-              uses: actions/setup-node@v2
-              with:
-                node-version: '22'
+      - name: List files in root directory
+        run: ls -R
 
-            - name: Install dependencies
-              run: npm install
-              working-directory: './clock-service'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-            - name: Run Tests
-              run: npm test
-              working-directory: './clock-service'
+      # Clock Service
+      - name: Install dependencies | Clock Service
+        run: npm install
+        working-directory: ./clock-service
+        
+      - name: List files in clock-service directory (verify correct path)
+        run: ls -R ./clock-service 
 
-            - name: Jest Code Coverage
-              uses: ArtiomTr/jest-coverage-report-action@v2
+      #- name: Run ESLint | Clock Service
+      #  run: npx eslint '**/*.js' --max-warnings=0
+      #  working-directory: ./clock-service
+
+      - name: Run Tests | Clock Service
+        run: npm test -- --coverage
+        working-directory: ./clock-service
+
+      # Genereer de Jest coverage rapporten
+      - name: Jest coverage report | Clock Service
+        uses: ArtiomTr/jest-coverage-report-action@v2.3.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          test-script: npm test -- --coverage
+          working-directory: ./clock-service 
+          threshold: 80
+          package-manager: npm
+          output: comment
+
+      # Register Service
+      - name: Install dependencies | Register Service
+        run: npm install
+        working-directory: ./register-service
+        
+      - name: List files in Register-service directory (verify correct path)
+        run: ls -R ./register-service 
+
+      #- name: Run ESLint | Register Service
+      #  run: npx eslint '**/*.js' --max-warnings=0
+      #  working-directory: ./register-service
+
+      - name: Run Tests | Register Service
+        run: npm test -- --coverage
+        working-directory: ./register-service
+
+      # Genereer de Jest coverage rapporten
+      - name: Jest coverage report | Register Service
+        uses: ArtiomTr/jest-coverage-report-action@v2.3.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          test-script: npm test -- --coverage
+          working-directory: ./register-service 
+          threshold: 80
+          package-manager: npm
+          output: comment
