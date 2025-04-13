@@ -45,16 +45,4 @@ router.get('/images/:filename', (req, res) => {
     });
 });
 
-// router.get('/images/:filename', async (req, res) => {
-//     try {
-//         // const filename = req.params.filename;
-//         // const response = await axios.get(`${process.env.TARGET_SERVICE_URL}/images/${filename}`);
-//         // return res.status(response.status).json({ imageUrl: response.data.imageUrl });
-
-
-//     } catch (error) {
-//         res.status(400).json({ message: error.message });
-//     }
-// });
-
 export default router;
