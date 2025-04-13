@@ -56,11 +56,9 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           working-directory: register-service
-          output: 'summary'
 
       - name: Jest Code Coverage Report | Clock Service
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           working-directory: clock-service
-          output: 'summary'
