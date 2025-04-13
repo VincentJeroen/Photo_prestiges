@@ -106,6 +106,15 @@ services:
     networks:
       - app-network
 
+  register-db-exporter:
+    image: bitnami/mongodb-exporter:latest
+    environment:
+      - MONGODB_URI=mongodb://register-db:27017
+    depends_on:
+      - register-db
+    networks:
+      - app-network
+
   score-service:
     build: ./score-service
     container_name: score-service
@@ -144,6 +153,16 @@ services:
       - /app/node_module
     depends_on:
       - rabbitmq
+    networks:
+      - app-network
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/monitoring.yml:/etc/prometheus/monitoring.yml
     networks:
       - app-network
 

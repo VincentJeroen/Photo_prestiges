@@ -1,0 +1,15 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'register-service'
+    static_configs:
+      - targets: ['register-service:3004']
+
+  - job_name: 'register-db'
+    static_configs:
+      - targets: ['register-db-exporter:9216']
