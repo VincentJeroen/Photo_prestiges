@@ -1,31 +1,54 @@
-name: 'Jest Code Coverage'
+name: API CI Workflow
+
 on:
-    push:
-        branches:
-            - devops
-    pull_request:
-        branches:
-            - devops
-            
+  push:
+    branches:
+      - 'devops'
+  pull_request:
+    branches:
+      - devops
+
 jobs:
-    coverage:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      checks: write
+      pull-requests: write  
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-            - name: Setup Node.JS
-              uses: actions/setup-node@v2
-              with:
-                node-version: '22'
+      - name: List files in root directory (to check if clock-service exists)
+        run: ls -R
 
-            - name: Install dependencies
-              run: npm install
-              working-directory: './clock-service'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-            - name: Run Tests
-              run: npm test
-              working-directory: './clock-service'
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./clock-service
+        
+      - name: List files in clock-service directory (verify correct path)
+        run: ls -R ./clock-service 
 
-            - name: Jest Code Coverage
-              uses: ArtiomTr/jest-coverage-report-action@v2
+      - name: Run ESLint
+        run: npx eslint '**/*.js' --max-warnings=0
+        working-directory: ./clock-service
+
+      - name: Run Tests
+        run: npm test -- --coverage
+        working-directory: ./clock-service
+
+      # Genereer de Jest coverage rapporten
+      - name: Jest coverage report
+        uses: ArtiomTr/jest-coverage-report-action@v2.3.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          test-script: npm test -- --coverage
+          working-directory: ./clock-service 
+          threshold: 80
+          package-manager: npm
+          output: comment
