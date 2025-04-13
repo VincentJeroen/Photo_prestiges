@@ -184,5 +184,4 @@ volumes:
   auth-db-data:
   register-db-data:
   score-db-data:
-  target-db-data:
   clock-db-data:
