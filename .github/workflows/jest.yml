@@ -51,12 +51,14 @@ jobs:
             cd ..
           done
 
-      - name: Jest Code Coverage Report
+      - name: Jest Code Coverage Report | Register Service
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
-          working-directory: register-service # or clock-service, depending on where your main coverage is
+          working-directory: register-service
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Jest Code Coverage Report
+      - name: Jest Code Coverage Report | Clock Service
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
-          working-directory: clock-service # or clock-service, depending on where your main coverage is
+          working-directory: clock-service
+          github-token: ${{ secrets.GITHUB_TOKEN }}
